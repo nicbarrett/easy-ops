@@ -1,8 +1,10 @@
 package com.iowaicecreamconcepts.api.inventory.dto;
 
+import com.iowaicecreamconcepts.api.inventory.model.InventoryItem;
 import jakarta.validation.constraints.*;
-
 import lombok.*;
+
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
@@ -13,19 +15,19 @@ public class InventoryItemRequest {
     @NotBlank
     private String name;
 
-    @NotBlank
-    private String location;
+    @NotNull
+    private InventoryItem.Category category;
 
     @NotBlank
     private String unit;
 
     @NotNull
     @PositiveOrZero
-    private Double minStockLevel;
-
-    @NotNull
-    @PositiveOrZero
     private Double parStockLevel;
 
-    private String supplier;
+    private UUID defaultLocationId;
+
+    private String sku;
+
+    private String notes;
 }

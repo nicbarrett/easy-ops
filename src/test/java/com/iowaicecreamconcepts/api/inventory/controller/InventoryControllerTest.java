@@ -7,10 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Map;
+import java.util.UUID;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -27,15 +29,16 @@ public class InventoryControllerTest {
     private ObjectMapper objectMapper;
 
     @Test
+    @WithMockUser(roles = "ADMIN")
     void shouldCreateAndFetchInventoryItem() throws Exception {
         // Build inventory item
         InventoryItemRequest itemRequest = InventoryItemRequest.builder()
                 .name("Whipped Cream")
                 .unit("can")
-                .minStockLevel(1.0)
+                .category(com.iowaicecreamconcepts.api.inventory.model.InventoryItem.Category.MIX_IN)
                 .parStockLevel(2.0)
-                .supplier("Dairy Best")
-                .location("Fridge - Left")
+                .sku("WC-001")
+                .notes("Whipped cream for desserts")
                 .build();
 
         // POST to create item
@@ -51,7 +54,7 @@ public class InventoryControllerTest {
 
         // Extract the ID
         Map<String, Object> result = objectMapper.readValue(response, Map.class);
-        Long id = Long.valueOf(result.get("id").toString());
+        String id = result.get("id").toString();
 
         // GET by ID
         mockMvc.perform(get("/api/inventory/" + id))
@@ -60,8 +63,10 @@ public class InventoryControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = "ADMIN")
     void shouldReturnNotFoundForMissingItem() throws Exception {
-        mockMvc.perform(get("/api/inventory/9999"))
+        UUID randomId = UUID.randomUUID();
+        mockMvc.perform(get("/api/inventory/" + randomId))
                 .andExpect(status().isNotFound());
     }
 }

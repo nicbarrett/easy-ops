@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/inventory")
@@ -26,7 +27,7 @@ public class InventoryController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<InventoryItem> getItemById(@PathVariable Long id) {
+    public ResponseEntity<InventoryItem> getItemById(@PathVariable UUID id) {
         return service.getItemById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -39,13 +40,13 @@ public class InventoryController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<InventoryItem> updateItem(@PathVariable Long id, @Valid @RequestBody InventoryItemRequest itemRequest) {
+    public ResponseEntity<InventoryItem> updateItem(@PathVariable UUID id, @Valid @RequestBody InventoryItemRequest itemRequest) {
         InventoryItem item = InventoryItem.fromRequest(itemRequest);
         return ResponseEntity.ok(service.updateItem(id, item));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteItem(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteItem(@PathVariable UUID id) {
         service.deleteItem(id);
         return ResponseEntity.noContent().build();
     }

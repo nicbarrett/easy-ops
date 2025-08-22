@@ -1,0 +1,324 @@
+/* Global CSS Modules for Sweet Swirls Operations App */
+/* Mobile-first responsive design (360px - 1280px) */
+
+/* Reset and base styles */
+.app {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+/* CSS Custom Properties (Design System) */
+:root {
+  /* Colors - Ice cream inspired palette */
+  --primary: #3b82f6;          /* Blue */
+  --primary-hover: #2563eb;
+  --secondary: #ec4899;        /* Pink */
+  --secondary-hover: #db2777;
+  --success: #10b981;          /* Green */
+  --warning: #f59e0b;          /* Orange */
+  --danger: #ef4444;           /* Red */
+  --info: #06b6d4;            /* Cyan */
+  
+  /* Neutral colors */
+  --gray-50: #f9fafb;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
+  --gray-300: #d1d5db;
+  --gray-400: #9ca3af;
+  --gray-500: #6b7280;
+  --gray-600: #4b5563;
+  --gray-700: #374151;
+  --gray-800: #1f2937;
+  --gray-900: #111827;
+  
+  /* Semantic colors */
+  --bg-primary: #ffffff;
+  --bg-secondary: var(--gray-50);
+  --bg-tertiary: var(--gray-100);
+  --text-primary: var(--gray-900);
+  --text-secondary: var(--gray-600);
+  --text-muted: var(--gray-400);
+  --border: var(--gray-200);
+  --border-hover: var(--gray-300);
+  
+  /* Spacing scale */
+  --space-1: 0.25rem;   /* 4px */
+  --space-2: 0.5rem;    /* 8px */
+  --space-3: 0.75rem;   /* 12px */
+  --space-4: 1rem;      /* 16px */
+  --space-5: 1.25rem;   /* 20px */
+  --space-6: 1.5rem;    /* 24px */
+  --space-8: 2rem;      /* 32px */
+  --space-10: 2.5rem;   /* 40px */
+  --space-12: 3rem;     /* 48px */
+  --space-16: 4rem;     /* 64px */
+  
+  /* Border radius */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  
+  /* Typography */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  
+  /* Layout */
+  --header-height: 60px;
+  --sidebar-width: 280px;
+  --container-max: 1280px;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-primary: var(--gray-900);
+    --bg-secondary: var(--gray-800);
+    --bg-tertiary: var(--gray-700);
+    --text-primary: var(--gray-50);
+    --text-secondary: var(--gray-300);
+    --text-muted: var(--gray-500);
+    --border: var(--gray-700);
+    --border-hover: var(--gray-600);
+  }
+}
+
+/* Container and layout utilities */
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--space-4);
+}
+
+@media (min-width: 640px) {
+  .container {
+    padding: 0 var(--space-6);
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    padding: 0 var(--space-8);
+  }
+}
+
+/* Grid utilities */
+.grid {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.gridCols1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+.gridCols2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.gridCols3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.gridCols4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+@media (min-width: 768px) {
+  .gridMd2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .gridMd3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .gridMd4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+@media (min-width: 1024px) {
+  .gridLg3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .gridLg4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .gridLg6 { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+}
+
+/* Flex utilities */
+.flex {
+  display: flex;
+}
+
+.flexCol {
+  flex-direction: column;
+}
+
+.flexWrap {
+  flex-wrap: wrap;
+}
+
+.itemsCenter {
+  align-items: center;
+}
+
+.itemsStart {
+  align-items: flex-start;
+}
+
+.justifyBetween {
+  justify-content: space-between;
+}
+
+.justifyCenter {
+  justify-content: center;
+}
+
+.justifyEnd {
+  justify-content: flex-end;
+}
+
+.gap2 { gap: var(--space-2); }
+.gap3 { gap: var(--space-3); }
+.gap4 { gap: var(--space-4); }
+.gap6 { gap: var(--space-6); }
+.gap8 { gap: var(--space-8); }
+
+/* Spacing utilities */
+.p2 { padding: var(--space-2); }
+.p3 { padding: var(--space-3); }
+.p4 { padding: var(--space-4); }
+.p6 { padding: var(--space-6); }
+.p8 { padding: var(--space-8); }
+
+.px2 { padding-left: var(--space-2); padding-right: var(--space-2); }
+.px3 { padding-left: var(--space-3); padding-right: var(--space-3); }
+.px4 { padding-left: var(--space-4); padding-right: var(--space-4); }
+.px6 { padding-left: var(--space-6); padding-right: var(--space-6); }
+
+.py2 { padding-top: var(--space-2); padding-bottom: var(--space-2); }
+.py3 { padding-top: var(--space-3); padding-bottom: var(--space-3); }
+.py4 { padding-top: var(--space-4); padding-bottom: var(--space-4); }
+.py6 { padding-top: var(--space-6); padding-bottom: var(--space-6); }
+
+.m2 { margin: var(--space-2); }
+.m4 { margin: var(--space-4); }
+.m6 { margin: var(--space-6); }
+
+.mb2 { margin-bottom: var(--space-2); }
+.mb4 { margin-bottom: var(--space-4); }
+.mb6 { margin-bottom: var(--space-6); }
+.mb8 { margin-bottom: var(--space-8); }
+
+.mt2 { margin-top: var(--space-2); }
+.mt4 { margin-top: var(--space-4); }
+.mt6 { margin-top: var(--space-6); }
+.mt8 { margin-top: var(--space-8); }
+
+/* Typography utilities */
+.textXs { font-size: var(--text-xs); }
+.textSm { font-size: var(--text-sm); }
+.textBase { font-size: var(--text-base); }
+.textLg { font-size: var(--text-lg); }
+.textXl { font-size: var(--text-xl); }
+.text2xl { font-size: var(--text-2xl); }
+.text3xl { font-size: var(--text-3xl); }
+
+.fontMedium { font-weight: 500; }
+.fontSemibold { font-weight: 600; }
+.fontBold { font-weight: 700; }
+
+.textPrimary { color: var(--text-primary); }
+.textSecondary { color: var(--text-secondary); }
+.textMuted { color: var(--text-muted); }
+.textSuccess { color: var(--success); }
+.textWarning { color: var(--warning); }
+.textDanger { color: var(--danger); }
+.textInfo { color: var(--info); }
+
+.textCenter { text-align: center; }
+.textLeft { text-align: left; }
+.textRight { text-align: right; }
+
+/* Background utilities */
+.bgPrimary { background-color: var(--bg-primary); }
+.bgSecondary { background-color: var(--bg-secondary); }
+.bgTertiary { background-color: var(--bg-tertiary); }
+
+/* Border utilities */
+.border { border: 1px solid var(--border); }
+.borderT { border-top: 1px solid var(--border); }
+.borderB { border-bottom: 1px solid var(--border); }
+.borderL { border-left: 1px solid var(--border); }
+.borderR { border-right: 1px solid var(--border); }
+
+.rounded { border-radius: var(--radius-md); }
+.roundedSm { border-radius: var(--radius-sm); }
+.roundedLg { border-radius: var(--radius-lg); }
+.roundedXl { border-radius: var(--radius-xl); }
+.roundedFull { border-radius: 9999px; }
+
+/* Shadow utilities */
+.shadowSm { box-shadow: var(--shadow-sm); }
+.shadowMd { box-shadow: var(--shadow-md); }
+.shadowLg { box-shadow: var(--shadow-lg); }
+
+/* Width and height utilities */
+.wFull { width: 100%; }
+.hFull { height: 100%; }
+.minHScreen { min-height: 100vh; }
+
+/* Position utilities */
+.relative { position: relative; }
+.absolute { position: absolute; }
+.fixed { position: fixed; }
+.sticky { position: sticky; }
+
+/* Display utilities */
+.block { display: block; }
+.inlineBlock { display: inline-block; }
+.inline { display: inline; }
+.hidden { display: none; }
+
+/* Responsive visibility */
+@media (max-width: 639px) {
+  .hiddenSm { display: none; }
+}
+
+@media (min-width: 640px) and (max-width: 767px) {
+  .hiddenMd { display: none; }
+}
+
+@media (min-width: 768px) {
+  .hiddenLg { display: none; }
+}
+
+/* Focus and hover states */
+.focusOutline:focus {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.hoverBg:hover {
+  background-color: var(--bg-secondary);
+}
+
+/* Accessibility */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :root {
+    --border: #000000;
+    --text-secondary: var(--text-primary);
+  }
+}
