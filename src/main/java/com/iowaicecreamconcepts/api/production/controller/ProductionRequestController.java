@@ -41,9 +41,11 @@ public class ProductionRequestController {
             return ResponseEntity.ok(productionRequestService.getRequestsByLocationAndStatus(locationId, status));
         } else if (status != null) {
             return ResponseEntity.ok(productionRequestService.getRequestsByStatus(status));
+        } else {
+            // For now, return empty list if no filters specified
+            // TODO: Implement getAllRequests in service
+            return ResponseEntity.ok(List.of());
         }
-        
-        return ResponseEntity.badRequest().build();
     }
 
     @GetMapping("/overdue")

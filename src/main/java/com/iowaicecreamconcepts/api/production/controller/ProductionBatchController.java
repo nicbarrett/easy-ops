@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/production/batch")
+@RequestMapping("/api/production/batches")
 @CrossOrigin
 public class ProductionBatchController {
 
@@ -26,8 +26,8 @@ public class ProductionBatchController {
         return ResponseEntity.ok(service.getBatch(id));
     }
 
-    @GetMapping("/all")
-    public List<ProductionBatch> listAll() {
+    @GetMapping
+    public List<ProductionBatch> listAll(@RequestParam(required = false) String status) {
         return service.listAll();
     }
 }

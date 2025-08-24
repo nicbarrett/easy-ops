@@ -2,8 +2,10 @@ package com.iowaicecreamconcepts.api.auth.controller;
 
 import com.iowaicecreamconcepts.api.auth.model.User;
 import com.iowaicecreamconcepts.api.auth.service.AuthService;
+import com.iowaicecreamconcepts.api.auth.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,6 +18,8 @@ import java.util.UUID;
 public class AuthController {
 
     private final AuthService authService;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
@@ -27,22 +31,28 @@ public class AuthController {
 
         User user = userOpt.get();
         
-        // TODO: Implement proper password verification
-        // For now, just return user info (this is a basic implementation)
+        // Verify password
+        if (!passwordEncoder.matches(request.getPassword(), user.getPasswordHash())) {
+            return ResponseEntity.badRequest().build();
+        }
+        
+        // Generate JWT token
+        String token = jwtUtil.generateToken(user);
         
         LoginResponse response = new LoginResponse();
         response.setUserId(user.getId());
         response.setName(user.getName());
         response.setEmail(user.getEmail());
         response.setRole(user.getRole());
+        response.setToken(token);
         
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/users")
     public ResponseEntity<User> createUser(@RequestBody CreateUserRequest request) {
-        // TODO: Hash password properly
-        String passwordHash = "hashed_" + request.getPassword(); // Placeholder
+        // Hash password properly
+        String passwordHash = passwordEncoder.encode(request.getPassword());
         
         User user = authService.createUser(
                 request.getName(),

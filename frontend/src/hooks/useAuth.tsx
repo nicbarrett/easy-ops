@@ -25,20 +25,22 @@ export function AuthProvider({ children }: AuthProviderProps) {
   useEffect(() => {
     // Check if user is already authenticated on app load
     const token = localStorage.getItem('auth_token');
-    if (token) {
-      apiClient.getCurrentUser()
-        .then(setUser)
-        .catch(() => {
-          localStorage.removeItem('auth_token');
-        })
-        .finally(() => setLoading(false));
-    } else {
-      setLoading(false);
+    const userData = localStorage.getItem('user_data');
+    
+    if (token && userData) {
+      try {
+        setUser(JSON.parse(userData));
+      } catch {
+        localStorage.removeItem('auth_token');
+        localStorage.removeItem('user_data');
+      }
     }
+    setLoading(false);
   }, []);
 
   const login = async (credentials: LoginRequest) => {
     const response = await apiClient.login(credentials);
+    
     // The user data is returned in the login response
     const userData: User = {
       id: response.userId,
@@ -49,11 +51,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };
+    // Save user data to localStorage for persistence
+    localStorage.setItem('user_data', JSON.stringify(userData));
     setUser(userData);
   };
 
   const logout = () => {
     apiClient.logout();
+    localStorage.removeItem('user_data');
     setUser(null);
   };
 

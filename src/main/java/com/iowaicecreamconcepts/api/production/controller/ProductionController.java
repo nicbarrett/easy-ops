@@ -30,22 +30,6 @@ public class ProductionController {
         return ResponseEntity.ok(batch);
     }
 
-    @GetMapping("/batches")
-    public ResponseEntity<List<ProductionBatch>> getBatches(
-            @RequestParam(required = false) ProductionBatch.Status status) {
-        
-        if (status != null) {
-            return ResponseEntity.ok(productionService.getBatchesByStatus(status));
-        }
-        
-        return ResponseEntity.badRequest().build();
-    }
-
-    @GetMapping("/batches/{batchId}")
-    public ResponseEntity<ProductionBatch> getBatch(@PathVariable UUID batchId) {
-        return ResponseEntity.ok(productionService.getBatch(batchId));
-    }
-
     @PostMapping("/batches/{batchId}/complete")
     public ResponseEntity<ProductionBatch> completeBatch(@PathVariable UUID batchId) {
         ProductionBatch batch = productionService.completeBatch(batchId);
@@ -73,6 +57,22 @@ public class ProductionController {
                 request.getNotes()
         );
         return ResponseEntity.ok(wasteEvent);
+    }
+
+    @GetMapping("/waste")
+    public ResponseEntity<List<WasteEvent>> getWasteEvents(
+            @RequestParam(required = false) UUID batchId,
+            @RequestParam(required = false) UUID itemId) {
+        
+        if (batchId != null) {
+            return ResponseEntity.ok(productionService.getWasteEventsByBatch(batchId));
+        } else if (itemId != null) {
+            return ResponseEntity.ok(productionService.getWasteEventsByItem(itemId));
+        } else {
+            // For now, return empty list if no filters specified
+            // TODO: Implement getAllWasteEvents in service
+            return ResponseEntity.ok(List.of());
+        }
     }
 
     @PostMapping("/waste")
