@@ -14,16 +14,29 @@ This is a full-stack web application for an ice cream production facility called
 
 ## Build and Development Commands
 
+### Backend (Spring Boot API)
 - **Build the project**: `./gradlew build`
 - **Run the application**: `./gradlew bootRun` 
 - **Run tests**: `./gradlew test`
 - **Clean build**: `./gradlew clean build`
 
-The application runs on the default Spring Boot port (8080).
+The backend API runs on port 8080.
 
-## Architecture
+### Frontend (React App)
+```bash
+cd frontend
+npm install          # Install dependencies
+npm start            # Start development server (port 3000)
+npm run build        # Build for production
+npm test             # Run tests
+npm run lint         # Check code style
+npm run type-check   # TypeScript validation
+```
 
-The application follows a standard Spring Boot layered architecture with two main domain modules:
+## Detailed Architecture
+
+### Backend Architecture
+The Spring Boot application follows a standard layered architecture with these main domain modules:
 
 ### Inventory Module (`com.iowaicecreamconcepts.api.inventory`)
 - **Model**: `InventoryItem` - JPA entity for inventory items with stock levels, location, and supplier info
@@ -39,22 +52,88 @@ The application follows a standard Spring Boot layered architecture with two mai
 - **Repository**: JPA repository for production data
 - **DTO**: Request objects for batch operations
 
+### Authentication Module (`com.iowaicecreamconcepts.api.auth`)
+- **Model**: `User` - JPA entity with role-based permissions (ADMIN, PRODUCTION_LEAD, SHIFT_LEAD, TEAM_MEMBER)
+- **Controller**: Authentication endpoints at `/api/auth` for login and user management
+- **Service**: User authentication and authorization logic
+- **Repository**: User data access layer
+
+### Frontend Architecture
+The React application follows a feature-based architecture:
+
+```
+frontend/src/
+├── components/          # Reusable UI components
+│   ├── common/         # Generic components (buttons, forms, etc.)
+│   ├── layout/         # Layout components (header, sidebar, navigation)
+│   ├── inventory/      # Inventory-specific components
+│   └── production/     # Production-specific components
+├── pages/              # Route-level page components
+│   ├── auth/          # Login and authentication pages
+│   ├── dashboard/     # Main dashboard page
+│   ├── inventory/     # Inventory management pages
+│   └── production/    # Production management pages
+├── services/           # API client and external services
+├── hooks/              # Custom React hooks (useAuth, etc.)
+├── types/              # TypeScript type definitions
+├── styles/             # Global styles and CSS modules
+└── utils/              # Utility functions
+```
+
+### Key Features Implemented
+- **Mobile-First Design**: Responsive layout optimized for 360px-1280px viewports
+- **Role-Based UI**: Navigation and features adapt based on user permissions
+- **Real-Time Dashboard**: Shows low stock alerts, production requests, and daily metrics
+- **Authentication Flow**: JWT-based login with automatic token management
+- **API Integration**: Complete TypeScript client for all backend endpoints
+
 ## Key Technologies
 
-- **Framework**: Spring Boot 3.4.4 with Spring Data JPA, Validation, and Web
+### Backend Technologies
+- **Framework**: Spring Boot 3.4.4 with Spring Data JPA, Validation, Security, and Web
 - **Database**: PostgreSQL (production), H2 (development/testing)
 - **Java**: Version 21 with Lombok for boilerplate reduction
-- **Testing**: JUnit 5 with Spring Boot Test and Mockito
+- **Testing**: JUnit 5 with Spring Boot Test, Mockito, and JaCoCo for coverage
 - **Build**: Gradle with wrapper
+- **Security**: Spring Security with JWT authentication
 
-## Database Configuration
+### Frontend Technologies
+- **Framework**: React 19 with TypeScript
+- **Styling**: CSS Modules with custom design system
+- **Routing**: React Router DOM v7
+- **HTTP Client**: Axios for API communication
+- **Icons**: Lucide React icon library
+- **Date Handling**: date-fns library
+- **Build**: Create React App with TypeScript template
 
-The application uses profile-based configuration:
-- Default: Basic Spring application settings
-- Local: Development profile configuration
-- Test: Testing environment settings
+## Configuration
 
-Both inventory items and production batches use auto-generated IDs and timestamp tracking.
+### Backend Configuration
+The Spring Boot application uses profile-based configuration:
+- **Default**: Basic Spring application settings
+- **Local**: Development profile configuration  
+- **Test**: Testing environment with H2 database
+
+### Frontend Configuration
+Environment variables (`.env` file):
+```bash
+REACT_APP_API_URL=http://localhost:8080/api
+REACT_APP_NAME=Sweet Swirls Operations
+REACT_APP_VERSION=1.0.0
+REACT_APP_DEBUG=true
+```
+
+### Database Schema
+- All entities use UUID primary keys
+- Timestamp tracking (createdAt, updatedAt) on all entities
+- Role-based security with User entity supporting ADMIN, PRODUCTION_LEAD, SHIFT_LEAD, TEAM_MEMBER roles
+- Current stock is maintained through inventory sessions and production batch events
+
+### Development Workflow
+1. **Start Backend**: `./gradlew bootRun` (runs on port 8080)
+2. **Start Frontend**: `cd frontend && npm start` (runs on port 3000)
+3. **Run Tests**: `./gradlew test` (backend) and `npm test` (frontend)
+4. **Code Quality**: JaCoCo coverage reports and ESLint for code style
 
 ## Requirements
 
