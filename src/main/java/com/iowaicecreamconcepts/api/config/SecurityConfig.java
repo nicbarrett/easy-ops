@@ -4,6 +4,7 @@ import com.iowaicecreamconcepts.api.auth.filter.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -25,21 +26,38 @@ import java.util.List;
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final Environment environment;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        boolean isLocalProfile = Arrays.asList(environment.getActiveProfiles()).contains("local");
+        
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/api/auth/login").permitAll()
-                        .requestMatchers("/api/locations").permitAll()
-                        .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/api-docs/**", "/v3/api-docs/**").permitAll()
-                        .requestMatchers("/api/**").authenticated()
-                        .anyRequest().authenticated()
-                )
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+        
+        // Configure authorization
+        var authz = http.authorizeHttpRequests(auth -> {
+            auth.requestMatchers("/api/auth/login").permitAll()
+                .requestMatchers("/api/locations").permitAll()
+                .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/api-docs/**", "/v3/api-docs/**").permitAll();
+                
+            // Allow H2 console only in local profile
+            if (isLocalProfile) {
+                auth.requestMatchers("/h2-console/**").permitAll();
+            }
+            
+            auth.requestMatchers("/api/**").authenticated()
+                .anyRequest().authenticated();
+        });
+        
+        // Disable frame options for H2 console in local profile
+        if (isLocalProfile) {
+            http.headers(headers -> headers.frameOptions().disable());
+        }
+        
+        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
