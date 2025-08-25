@@ -78,8 +78,7 @@ class ApiClient {
   // Auth endpoints
   async login(credentials: LoginRequest): Promise<LoginResponse> {
     const response: AxiosResponse<LoginResponse> = await this.client.post('/auth/login', credentials);
-    // For now, create a dummy token since backend doesn't implement JWT yet
-    this.saveToken('dummy-token-' + response.data.userId);
+    this.saveToken(response.data.token);
     return response.data;
   }
 

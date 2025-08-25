@@ -157,7 +157,7 @@ export interface LoginResponse {
   name: string;
   email: string;
   role: UserRole;
-  token?: string;
+  token: string;
 }
 
 export interface CreateUserRequest {

@@ -8,13 +8,14 @@ import com.iowaicecreamconcepts.api.inventory.model.InventoryItem;
 import com.iowaicecreamconcepts.api.inventory.repository.InventoryItemRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -25,6 +26,16 @@ public class DataInitializer implements CommandLineRunner {
     private final LocationRepository locationRepository;
     private final UserRepository userRepository;
     private final InventoryItemRepository inventoryItemRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    @Value("${app.admin.email:admin@sweetswirls.com}")
+    private String adminEmail;
+    
+    @Value("${app.admin.password:admin123}")
+    private String adminPassword;
+    
+    @Value("${app.admin.name:System Administrator}")
+    private String adminName;
 
     @Override
     public void run(String... args) {
@@ -72,33 +83,33 @@ public class DataInitializer implements CommandLineRunner {
         if (userRepository.count() == 0) {
             List<User> users = Arrays.asList(
                     User.builder()
-                            .name("Admin User")
-                            .email("admin@sweetswirls.com")
-                            .passwordHash("hashed_admin_password") // TODO: Use proper password hashing
+                            .name(adminName)
+                            .email(adminEmail)
+                            .passwordHash(passwordEncoder.encode(adminPassword))
                             .role(User.Role.ADMIN)
                             .build(),
                     User.builder()
                             .name("Production Lead")
                             .email("production@sweetswirls.com")
-                            .passwordHash("hashed_production_password")
+                            .passwordHash(passwordEncoder.encode("production123"))
                             .role(User.Role.PRODUCTION_LEAD)
                             .build(),
                     User.builder()
                             .name("Shift Lead")
                             .email("shift@sweetswirls.com")
-                            .passwordHash("hashed_shift_password")
+                            .passwordHash(passwordEncoder.encode("shift123"))
                             .role(User.Role.SHIFT_LEAD)
                             .build(),
                     User.builder()
                             .name("Team Member")
                             .email("team@sweetswirls.com")
-                            .passwordHash("hashed_team_password")
+                            .passwordHash(passwordEncoder.encode("team123"))
                             .role(User.Role.TEAM_MEMBER)
                             .build()
             );
 
             userRepository.saveAll(users);
-            log.info("Initialized {} users", users.size());
+            log.info("Initialized {} users with properly hashed passwords", users.size());
         }
     }
 
