@@ -300,6 +300,7 @@
 .bgYellow { background-color: #f59e0b; }
 .bgPurple { background-color: #8b5cf6; }
 .bgGray { background-color: var(--gray-500); }
+.bgRed { background-color: var(--danger); }
 
 /* Text color utilities for categories */
 .textBlue { color: #1e40af; }
@@ -307,6 +308,21 @@
 .textYellow { color: #92400e; }
 .textPurple { color: #6b21a8; }
 .textGray { color: var(--gray-700); }
+.textRed { color: var(--danger); }
+
+/* Spacing utilities */
+.spaceY3 > * + * { margin-top: 0.75rem; }
+.py6 { padding-top: 1.5rem; padding-bottom: 1.5rem; }
+
+/* Opacity utilities */
+.opacity75 { opacity: 0.75; }
+.opacity60 { opacity: 0.6; }
+
+/* Border utilities - left borders */
+.borderL4 { border-left-width: 4px; }
+.borderYellow { border-left-color: var(--warning); }
+.borderGreen { border-left-color: var(--success); }
+.borderRed { border-left-color: var(--danger); }
 
 /* Margin utilities */
 .mt1 { margin-top: 0.25rem; }

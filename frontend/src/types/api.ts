@@ -198,8 +198,11 @@ export interface CreateProductionRequestRequest {
   productItemId: string;
   locationId: string;
   neededBy: string;
+  targetQuantity: number;
+  unit: string;
   priority: ProductionPriority;
   reason: string;
+  requestedBy: string;
 }
 
 export interface CreateBatchRequest {

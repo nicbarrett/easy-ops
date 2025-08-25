@@ -115,7 +115,15 @@ export default function ProductionPage() {
           <p className={`${globals.textLg} ${globals.textDanger} ${globals.mb4}`}>{error}</p>
           <button 
             onClick={loadData}
-            className={`${globals.px4} ${globals.py2} ${globals.bgPrimary} ${globals.textPrimary} ${globals.rounded}`}
+            style={{
+              padding: '8px 16px',
+              backgroundColor: 'var(--primary)',
+              color: 'white',
+              borderRadius: '8px',
+              cursor: 'pointer',
+              border: 'none',
+              transition: 'all 0.2s ease-in-out'
+            }}
           >
             Try Again
           </button>
@@ -137,15 +145,45 @@ export default function ProductionPage() {
         </div>
         <div className={`${globals.flex} ${globals.gap2}`}>
           <button 
-            onClick={() => setShowRequestForm(true)}
-            className={`${globals.flex} ${globals.itemsCenter} ${globals.gap2} ${globals.px4} ${globals.py3} ${globals.bgPrimary} ${globals.textPrimary} ${globals.border} ${globals.rounded} ${globals.shadowSm}`}
+            onClick={() => {
+              console.log('New Request button clicked');
+              setShowRequestForm(true);
+            }}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              padding: '12px 16px',
+              backgroundColor: 'var(--primary)',
+              color: 'white',
+              border: '1px solid var(--border)',
+              borderRadius: '8px',
+              boxShadow: 'var(--shadow-sm)',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease-in-out'
+            }}
           >
             <Plus size={20} />
             New Request
           </button>
           <button 
-            onClick={() => setShowBatchForm(true)}
-            className={`${globals.flex} ${globals.itemsCenter} ${globals.gap2} ${globals.px4} ${globals.py3} ${globals.bgSecondary} ${globals.textPrimary} ${globals.border} ${globals.rounded} ${globals.shadowSm}`}
+            onClick={() => {
+              console.log('Record Batch button clicked');
+              setShowBatchForm(true);
+            }}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              padding: '12px 16px',
+              backgroundColor: 'var(--bg-secondary)',
+              color: 'var(--text-primary)',
+              border: '1px solid var(--border)',
+              borderRadius: '8px',
+              boxShadow: 'var(--shadow-sm)',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease-in-out'
+            }}
           >
             <Factory size={20} />
             Record Batch

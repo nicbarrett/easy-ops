@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, Save, Calendar } from 'lucide-react';
 import { CreateProductionRequestRequest, InventoryItem, Location, ProductionPriority } from '../../types/api';
 import { format } from 'date-fns';
+import { useAuth } from '../../hooks/useAuth';
 import globals from '../../styles/globals.module.css';
 
 interface ProductionRequestFormProps {
@@ -17,15 +18,26 @@ export default function ProductionRequestForm({
   onSubmit,
   onCancel
 }: ProductionRequestFormProps) {
+  const { user } = useAuth();
   const [formData, setFormData] = useState<CreateProductionRequestRequest>({
     productItemId: '',
     locationId: '',
     neededBy: format(new Date(Date.now() + 24 * 60 * 60 * 1000), 'yyyy-MM-dd\'T\'HH:mm'),
+    targetQuantity: 1,
+    unit: 'units',
     priority: 'NORMAL',
-    reason: ''
+    reason: '',
+    requestedBy: user?.id || ''
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  // Update requestedBy when user becomes available
+  useEffect(() => {
+    if (user?.id && !formData.requestedBy) {
+      setFormData(prev => ({ ...prev, requestedBy: user.id }));
+    }
+  }, [user?.id, formData.requestedBy]);
 
   const handleChange = (field: keyof CreateProductionRequestRequest, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -58,6 +70,14 @@ export default function ProductionRequestForm({
       newErrors.reason = 'Reason is required';
     }
 
+    if (!formData.targetQuantity || formData.targetQuantity <= 0) {
+      newErrors.targetQuantity = 'Target quantity must be greater than 0';
+    }
+
+    if (!formData.unit.trim()) {
+      newErrors.unit = 'Unit is required';
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -70,8 +90,28 @@ export default function ProductionRequestForm({
   };
 
   return (
-    <div className={`${globals.fixed} ${globals.inset0} ${globals.bgBlackOpacity50} ${globals.flex} ${globals.itemsCenter} ${globals.justifyCenter} ${globals.p4} ${globals.zIndex50}`}>
-      <div className={`${globals.bgPrimary} ${globals.rounded} ${globals.p6} ${globals.maxWLg} ${globals.wFull} ${globals.maxHScreen} ${globals.overflowYAuto}`}>
+    <div style={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '16px',
+      zIndex: 50
+    }}>
+      <div style={{
+        backgroundColor: 'var(--bg-primary)',
+        borderRadius: '8px',
+        padding: '24px',
+        maxWidth: '32rem',
+        width: '100%',
+        maxHeight: '100vh',
+        overflowY: 'auto'
+      }}>
         <div className={`${globals.flex} ${globals.itemsCenter} ${globals.justifyBetween} ${globals.mb6}`}>
           <h2 className={`${globals.textXl} ${globals.fontSemibold} ${globals.flex} ${globals.itemsCenter} ${globals.gap2}`}>
             <Calendar size={20} />
@@ -79,13 +119,21 @@ export default function ProductionRequestForm({
           </h2>
           <button 
             onClick={onCancel}
-            className={`${globals.p2} ${globals.textMuted} ${globals.rounded} ${globals.transition}`}
+            style={{
+              padding: '8px',
+              color: 'var(--text-muted)',
+              borderRadius: '8px',
+              transition: 'all 0.2s ease-in-out',
+              cursor: 'pointer',
+              border: 'none',
+              background: 'transparent'
+            }}
           >
             <X size={20} />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className={`${globals.spaceY4}`}>
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           {/* Product Item */}
           <div>
             <label className={`${globals.block} ${globals.textSm} ${globals.fontMedium} ${globals.mb2}`}>
@@ -124,6 +172,38 @@ export default function ProductionRequestForm({
               ))}
             </select>
             {errors.locationId && <p className={`${globals.textDanger} ${globals.textSm} ${globals.mt1}`}>{errors.locationId}</p>}
+          </div>
+
+          {/* Target Quantity & Unit */}
+          <div className={`${globals.grid} ${globals.gridCols2} ${globals.gap4}`}>
+            <div>
+              <label className={`${globals.block} ${globals.textSm} ${globals.fontMedium} ${globals.mb2}`}>
+                Target Quantity *
+              </label>
+              <input
+                type="number"
+                min="0.1"
+                step="0.1"
+                value={formData.targetQuantity}
+                onChange={(e) => handleChange('targetQuantity', parseFloat(e.target.value) || 0)}
+                className={`${globals.wFull} ${globals.px3} ${globals.py2} ${globals.border} ${globals.rounded} ${errors.targetQuantity ? globals.borderDanger : ''}`}
+                placeholder="1.0"
+              />
+              {errors.targetQuantity && <p className={`${globals.textDanger} ${globals.textSm} ${globals.mt1}`}>{errors.targetQuantity}</p>}
+            </div>
+            <div>
+              <label className={`${globals.block} ${globals.textSm} ${globals.fontMedium} ${globals.mb2}`}>
+                Unit *
+              </label>
+              <input
+                type="text"
+                value={formData.unit}
+                onChange={(e) => handleChange('unit', e.target.value)}
+                className={`${globals.wFull} ${globals.px3} ${globals.py2} ${globals.border} ${globals.rounded} ${errors.unit ? globals.borderDanger : ''}`}
+                placeholder="e.g., gallons, batches, dozen"
+              />
+              {errors.unit && <p className={`${globals.textDanger} ${globals.textSm} ${globals.mt1}`}>{errors.unit}</p>}
+            </div>
           </div>
 
           {/* Priority & Needed By Date */}
@@ -175,13 +255,32 @@ export default function ProductionRequestForm({
             <button 
               type="button"
               onClick={onCancel}
-              className={`${globals.px4} ${globals.py2} ${globals.border} ${globals.rounded} ${globals.textMuted}`}
+              style={{
+                padding: '8px 16px',
+                border: '1px solid var(--border)',
+                borderRadius: '8px',
+                color: 'var(--text-muted)',
+                background: 'transparent',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease-in-out'
+              }}
             >
               Cancel
             </button>
             <button 
               type="submit"
-              className={`${globals.flex} ${globals.itemsCenter} ${globals.gap2} ${globals.px4} ${globals.py2} ${globals.bgPrimary} ${globals.textPrimary} ${globals.rounded}`}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '8px 16px',
+                backgroundColor: 'var(--primary)',
+                color: 'white',
+                borderRadius: '8px',
+                border: 'none',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease-in-out'
+              }}
             >
               <Save size={16} />
               Create Request
