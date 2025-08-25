@@ -3,21 +3,23 @@ package com.iowaicecreamconcepts.api.auth.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iowaicecreamconcepts.api.auth.model.User;
 import com.iowaicecreamconcepts.api.auth.service.AuthService;
+import com.iowaicecreamconcepts.api.auth.util.JwtUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -35,6 +37,12 @@ class AuthControllerTest {
 
     @MockBean
     private AuthService authService;
+    
+    @MockBean
+    private PasswordEncoder passwordEncoder;
+    
+    @MockBean
+    private JwtUtil jwtUtil;
 
     private User testUser;
     private UUID testUserId;
@@ -56,6 +64,8 @@ class AuthControllerTest {
     void login_WithValidCredentials_ShouldReturnUserInfo() throws Exception {
         // Given
         when(authService.findByEmail("test@example.com")).thenReturn(Optional.of(testUser));
+        when(passwordEncoder.matches("password", "hashedPassword")).thenReturn(true);
+        when(jwtUtil.generateToken(testUser)).thenReturn("fake-jwt-token");
 
         AuthController.LoginRequest loginRequest = new AuthController.LoginRequest();
         loginRequest.setEmail("test@example.com");
@@ -70,9 +80,12 @@ class AuthControllerTest {
                 .andExpect(jsonPath("$.userId").value(testUserId.toString()))
                 .andExpect(jsonPath("$.name").value("Test User"))
                 .andExpect(jsonPath("$.email").value("test@example.com"))
-                .andExpect(jsonPath("$.role").value("TEAM_MEMBER"));
+                .andExpect(jsonPath("$.role").value("TEAM_MEMBER"))
+                .andExpect(jsonPath("$.token").value("fake-jwt-token"));
 
         verify(authService).findByEmail("test@example.com");
+        verify(passwordEncoder).matches("password", "hashedPassword");
+        verify(jwtUtil).generateToken(testUser);
     }
 
     @Test
@@ -92,13 +105,15 @@ class AuthControllerTest {
                 .andExpect(status().isBadRequest());
 
         verify(authService).findByEmail("test@example.com");
+        verifyNoInteractions(passwordEncoder, jwtUtil);
     }
 
     @Test
     @WithMockUser(roles = "ADMIN")
     void createUser_WithValidData_ShouldCreateUser() throws Exception {
         // Given
-        when(authService.createUser(anyString(), anyString(), anyString(), any(User.Role.class)))
+        when(passwordEncoder.encode("password")).thenReturn("hashed_password");
+        when(authService.createUser("Test User", "test@example.com", "hashed_password", User.Role.TEAM_MEMBER))
                 .thenReturn(testUser);
 
         AuthController.CreateUserRequest createRequest = new AuthController.CreateUserRequest();
@@ -116,6 +131,7 @@ class AuthControllerTest {
                 .andExpect(jsonPath("$.name").value("Test User"))
                 .andExpect(jsonPath("$.email").value("test@example.com"));
 
+        verify(passwordEncoder).encode("password");
         verify(authService).createUser("Test User", "test@example.com", "hashed_password", User.Role.TEAM_MEMBER);
     }
 
@@ -123,7 +139,7 @@ class AuthControllerTest {
     @WithMockUser(roles = "ADMIN")
     void getUsers_ShouldReturnActiveUsers() throws Exception {
         // Given
-        when(authService.getActiveUsers()).thenReturn(Arrays.asList(testUser));
+        when(authService.getActiveUsers()).thenReturn(Collections.singletonList(testUser));
 
         // When/Then
         mockMvc.perform(get("/api/auth/users"))
@@ -138,7 +154,7 @@ class AuthControllerTest {
     @WithMockUser(roles = "ADMIN")
     void getUsers_WithRole_ShouldReturnUsersWithRole() throws Exception {
         // Given
-        when(authService.getUsersByRole(User.Role.TEAM_MEMBER)).thenReturn(Arrays.asList(testUser));
+        when(authService.getUsersByRole(User.Role.TEAM_MEMBER)).thenReturn(Collections.singletonList(testUser));
 
         // When/Then
         mockMvc.perform(get("/api/auth/users")
