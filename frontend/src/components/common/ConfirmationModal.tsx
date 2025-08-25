@@ -24,14 +24,27 @@ export default function ConfirmationModal({
   variant = 'default'
 }: ConfirmationModalProps) {
   if (!isOpen) return null;
-
-  const confirmButtonClass = variant === 'danger' 
-    ? `${globals.bgDanger} ${globals.textPrimary}` 
-    : `${globals.bgPrimary} ${globals.textPrimary}`;
-
-  return (
-    <div className={`${globals.fixed} ${globals.inset0} ${globals.bgBlackOpacity50} ${globals.flex} ${globals.itemsCenter} ${globals.justifyCenter} ${globals.p4} ${globals.zIndex50}`}>
-      <div className={`${globals.bgPrimary} ${globals.rounded} ${globals.p6} ${globals.maxWMd} ${globals.wFull}`}>
+    return (
+    <div style={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '16px',
+      zIndex: 50
+    }}>
+      <div style={{
+        backgroundColor: 'var(--bg-primary)',
+        borderRadius: '8px',
+        padding: '24px',
+        maxWidth: '28rem',
+        width: '100%'
+      }}>
         <div className={`${globals.flex} ${globals.itemsCenter} ${globals.justifyBetween} ${globals.mb4}`}>
           <div className={`${globals.flex} ${globals.itemsCenter} ${globals.gap2}`}>
             {variant === 'danger' && <AlertTriangle size={20} className={`${globals.textDanger}`} />}
@@ -39,7 +52,18 @@ export default function ConfirmationModal({
           </div>
           <button 
             onClick={onCancel}
-            className={`${globals.p2} ${globals.textMuted} ${globals.rounded} ${globals.transition}`}
+            style={{
+              padding: '8px',
+              color: 'var(--text-muted)',
+              borderRadius: '8px',
+              transition: 'all 0.2s ease-in-out',
+              cursor: 'pointer',
+              border: 'none',
+              background: 'transparent',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
           >
             <X size={20} />
           </button>
@@ -52,13 +76,29 @@ export default function ConfirmationModal({
         <div className={`${globals.flex} ${globals.gap3} ${globals.justifyEnd}`}>
           <button 
             onClick={onCancel}
-            className={`${globals.px4} ${globals.py2} ${globals.border} ${globals.rounded} ${globals.textMuted}`}
+            style={{
+              padding: '8px 16px',
+              border: '1px solid var(--border)',
+              borderRadius: '8px',
+              color: 'var(--text-muted)',
+              transition: 'all 0.2s ease-in-out',
+              cursor: 'pointer',
+              background: 'transparent'
+            }}
           >
             {cancelLabel}
           </button>
           <button 
             onClick={onConfirm}
-            className={`${globals.px4} ${globals.py2} ${confirmButtonClass} ${globals.rounded}`}
+            style={{
+              padding: '8px 16px',
+              backgroundColor: variant === 'danger' ? 'var(--danger)' : 'var(--primary)',
+              color: 'white',
+              borderRadius: '8px',
+              transition: 'all 0.2s ease-in-out',
+              cursor: 'pointer',
+              border: 'none'
+            }}
           >
             {confirmLabel}
           </button>

@@ -128,27 +128,27 @@ class ApiClient {
     const params: any = {};
     if (active !== undefined) params.active = active;
     if (locationId) params.location = locationId;
-    const response: AxiosResponse<InventoryItem[]> = await this.client.get('/inventory/items', { params });
+    const response: AxiosResponse<InventoryItem[]> = await this.client.get('/inventory', { params });
     return response.data;
   }
 
   async getInventoryItem(id: string): Promise<InventoryItem> {
-    const response: AxiosResponse<InventoryItem> = await this.client.get(`/inventory/items/${id}`);
+    const response: AxiosResponse<InventoryItem> = await this.client.get(`/inventory/${id}`);
     return response.data;
   }
 
   async createInventoryItem(item: InventoryItemRequest): Promise<InventoryItem> {
-    const response: AxiosResponse<InventoryItem> = await this.client.post('/inventory/items', item);
+    const response: AxiosResponse<InventoryItem> = await this.client.post('/inventory', item);
     return response.data;
   }
 
   async updateInventoryItem(id: string, item: Partial<InventoryItemRequest>): Promise<InventoryItem> {
-    const response: AxiosResponse<InventoryItem> = await this.client.put(`/inventory/items/${id}`, item);
+    const response: AxiosResponse<InventoryItem> = await this.client.put(`/inventory/${id}`, item);
     return response.data;
   }
 
   async deleteInventoryItem(id: string): Promise<void> {
-    await this.client.delete(`/inventory/items/${id}`);
+    await this.client.delete(`/inventory/${id}`);
   }
 
   // Inventory Session endpoints

@@ -66,19 +66,50 @@ export default function InventoryItemForm({
   };
 
   return (
-    <div className={`${globals.fixed} ${globals.inset0} ${globals.bgBlackOpacity50} ${globals.flex} ${globals.itemsCenter} ${globals.justifyCenter} ${globals.p4} ${globals.zIndex50}`}>
-      <div className={`${globals.bgPrimary} ${globals.rounded} ${globals.p6} ${globals.maxWLg} ${globals.wFull} ${globals.maxHScreen} ${globals.overflowYAuto}`}>
+    <div style={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '16px',
+      zIndex: 50
+    }}>
+      <div style={{
+        backgroundColor: 'var(--bg-primary)',
+        borderRadius: '8px',
+        padding: '24px',
+        maxWidth: '32rem',
+        width: '100%',
+        maxHeight: '100vh',
+        overflowY: 'auto'
+      }}>
         <div className={`${globals.flex} ${globals.itemsCenter} ${globals.justifyBetween} ${globals.mb6}`}>
           <h2 className={`${globals.textXl} ${globals.fontSemibold}`}>{title}</h2>
           <button 
             onClick={onCancel}
-            className={`${globals.p2} ${globals.textMuted} ${globals.rounded} ${globals.transition}`}
+            style={{
+              padding: '8px',
+              color: 'var(--text-muted)',
+              borderRadius: '8px',
+              transition: 'all 0.2s ease-in-out',
+              cursor: 'pointer',
+              border: 'none',
+              background: 'transparent',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
           >
             <X size={20} />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className={`${globals.spaceY4}`}>
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           {/* Name */}
           <div>
             <label className={`${globals.block} ${globals.textSm} ${globals.fontMedium} ${globals.mb2}`}>
@@ -194,13 +225,32 @@ export default function InventoryItemForm({
             <button 
               type="button"
               onClick={onCancel}
-              className={`${globals.px4} ${globals.py2} ${globals.border} ${globals.rounded} ${globals.textMuted}`}
+              style={{
+                padding: '8px 16px',
+                border: '1px solid var(--border)',
+                borderRadius: '8px',
+                color: 'var(--text-muted)',
+                transition: 'all 0.2s ease-in-out',
+                cursor: 'pointer',
+                background: 'transparent'
+              }}
             >
               Cancel
             </button>
             <button 
               type="submit"
-              className={`${globals.flex} ${globals.itemsCenter} ${globals.gap2} ${globals.px4} ${globals.py2} ${globals.bgPrimary} ${globals.textPrimary} ${globals.rounded}`}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '8px 16px',
+                backgroundColor: 'var(--primary)',
+                color: 'white',
+                borderRadius: '8px',
+                transition: 'all 0.2s ease-in-out',
+                cursor: 'pointer',
+                border: 'none'
+              }}
             >
               <Save size={16} />
               {submitLabel}

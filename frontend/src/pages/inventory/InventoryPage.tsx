@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Package, Plus, Search, Edit, Trash2, AlertCircle } from 'lucide-react';
+import { useAuth } from '../../hooks/useAuth';
 import apiClient from '../../services/api';
 import { InventoryItem, InventoryCategory, Location, InventoryItemRequest } from '../../types/api';
 import InventoryItemForm from '../../components/inventory/InventoryItemForm';
@@ -7,6 +8,7 @@ import ConfirmationModal from '../../components/common/ConfirmationModal';
 import globals from '../../styles/globals.module.css';
 
 export default function InventoryPage() {
+  const { user, isAuthenticated } = useAuth();
   const [items, setItems] = useState<InventoryItem[]>([]);
   const [locations, setLocations] = useState<Location[]>([]);
   const [loading, setLoading] = useState(true);
@@ -16,31 +18,50 @@ export default function InventoryPage() {
   const [editingItem, setEditingItem] = useState<InventoryItem | null>(null);
   const [deletingItem, setDeletingItem] = useState<InventoryItem | null>(null);
 
+  console.log('InventoryPage - Authentication status:', { isAuthenticated, user: user?.email });
+  console.log('InventoryPage - State:', { 
+    itemsCount: items.length, 
+    showAddModal, 
+    editingItem: editingItem?.id, 
+    deletingItem: deletingItem?.id 
+  });
+
   useEffect(() => {
     loadData();
   }, []);
 
+  useEffect(() => {
+    console.log('editingItem state changed:', editingItem);
+  }, [editingItem]);
+
   const loadData = async () => {
+    console.log('loadData called, authenticated:', isAuthenticated);
     try {
       setLoading(true);
       const [itemsData, locationsData] = await Promise.all([
         apiClient.getInventoryItems(),
         apiClient.getLocations()
       ]);
+      console.log('Data loaded successfully:', { items: itemsData.length, locations: locationsData.length });
       setItems(itemsData);
       setLocations(locationsData);
       setError(null);
-    } catch (err) {
-      setError('Failed to load inventory data');
-      console.error('Error loading inventory data:', err);
+    } catch (err: any) {
+      const errorMsg = err?.response?.status === 401 
+        ? 'Authentication required. Please log in first.' 
+        : 'Failed to load inventory data';
+      setError(errorMsg);
+      console.error('Error loading inventory data:', err?.response?.status, err?.message);
     } finally {
       setLoading(false);
     }
   };
 
   const handleCreateItem = async (data: InventoryItemRequest) => {
+    console.log('handleCreateItem called with data:', data);
     try {
       const newItem = await apiClient.createInventoryItem(data);
+      console.log('Item created successfully:', newItem);
       setItems(prev => [...prev, newItem]);
       setShowAddModal(false);
     } catch (err) {
@@ -116,7 +137,15 @@ export default function InventoryPage() {
           <p className={`${globals.textLg} ${globals.textDanger} ${globals.mb4}`}>{error}</p>
           <button 
             onClick={loadData}
-            className={`${globals.px4} ${globals.py2} ${globals.bgPrimary} ${globals.textPrimary} ${globals.rounded}`}
+            style={{
+              padding: '8px 16px',
+              backgroundColor: 'var(--primary)',
+              color: 'white',
+              borderRadius: '8px',
+              transition: 'all 0.2s ease-in-out',
+              cursor: 'pointer',
+              border: 'none'
+            }}
           >
             Try Again
           </button>
@@ -127,7 +156,8 @@ export default function InventoryPage() {
 
   return (
     <div className={`${globals.container}`}>
-      <div className={`${globals.flex} ${globals.itemsCenter} ${globals.justifyBetween} ${globals.mb8}`}>
+        {/* Header */}
+        <div className={`${globals.flex} ${globals.itemsCenter} ${globals.justifyBetween} ${globals.mb8}`}>
         <div>
           <h1 className={`${globals.text3xl} ${globals.fontBold} ${globals.textPrimary} ${globals.mb2}`}>
             Inventory Management
@@ -137,8 +167,24 @@ export default function InventoryPage() {
           </p>
         </div>
         <button 
-          onClick={() => setShowAddModal(true)}
-          className={`${globals.flex} ${globals.itemsCenter} ${globals.gap2} ${globals.px4} ${globals.py3} ${globals.bgPrimary} ${globals.textPrimary} ${globals.border} ${globals.rounded} ${globals.shadowSm}`}
+          onClick={() => {
+            console.log('Add Item button clicked');
+            setShowAddModal(true);
+          }}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            padding: '12px 16px',
+            backgroundColor: 'var(--primary)',
+            color: 'white',
+            border: '1px solid var(--border)',
+            borderRadius: '8px',
+            cursor: 'pointer',
+            transition: 'all 0.2s ease-in-out',
+            position: 'relative',
+            zIndex: 1
+          }}
         >
           <Plus size={20} />
           Add Item
@@ -173,7 +219,19 @@ export default function InventoryPage() {
           {items.length === 0 && (
             <button 
               onClick={() => setShowAddModal(true)}
-              className={`${globals.flex} ${globals.itemsCenter} ${globals.gap2} ${globals.px6} ${globals.py3} ${globals.bgPrimary} ${globals.textPrimary} ${globals.rounded} ${globals.mxAuto}`}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '12px 24px',
+                backgroundColor: 'var(--primary)',
+                color: 'white',
+                borderRadius: '8px',
+                margin: '0 auto',
+                transition: 'all 0.2s ease-in-out',
+                cursor: 'pointer',
+                border: 'none'
+              }}
             >
               <Plus size={20} />
               Add First Item
@@ -183,7 +241,8 @@ export default function InventoryPage() {
       ) : (
         <div className={`${globals.grid} ${globals.gridCols1} ${globals.gridMd2} ${globals.gridLg3} ${globals.gap6}`}>
           {filteredItems.map((item) => (
-            <div key={item.id} className={`${globals.bgPrimary} ${globals.border} ${globals.rounded} ${globals.p6} ${globals.shadowSm} ${globals.transition}`}>
+          // Item
+          <div key={item.id} className={`${globals.bgPrimary} ${globals.border} ${globals.rounded} ${globals.p6} ${globals.shadowSm} ${globals.transition}`}>
               <div className={`${globals.flex} ${globals.itemsStart} ${globals.justifyBetween} ${globals.mb4}`}>
                 <div className={`${globals.flex} ${globals.itemsCenter} ${globals.gap3}`}>
                   <div className={`${globals.p2} ${globals.rounded} ${getCategoryColor(item.category)}`}>
@@ -199,16 +258,49 @@ export default function InventoryPage() {
                     </div>
                   </div>
                 </div>
-                <div className={`${globals.flex} ${globals.gap1}`}>
-                  <button 
-                    onClick={() => setEditingItem(item)}
-                    className={`${globals.p2} ${globals.textMuted} ${globals.rounded} ${globals.transition}`}
+                <div className={`${globals.flex} ${globals.gap2}`}>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      console.log('Edit button clicked for item:', item.id);
+                      console.log('Current editingItem state:', editingItem);
+                      console.log('Setting editingItem to:', item);
+                      setEditingItem(item);
+                      console.log('setEditingItem called');
+                    }}
+                    style={{
+                      padding: '8px',
+                      color: 'var(--text-muted)',
+                      borderRadius: '8px',
+                      transition: 'all 0.2s ease-in-out',
+                      cursor: 'pointer',
+                      border: 'none',
+                      background: 'transparent',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}
                   >
                     <Edit size={16} />
                   </button>
-                  <button 
-                    onClick={() => setDeletingItem(item)}
-                    className={`${globals.p2} ${globals.textMuted} ${globals.rounded} ${globals.transition}`}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      console.log('Delete button clicked for item:', item.id);
+                      setDeletingItem(item);
+                    }}
+                    style={{
+                      padding: '8px',
+                      color: 'var(--text-muted)',
+                      borderRadius: '8px',
+                      transition: 'all 0.2s ease-in-out',
+                      cursor: 'pointer',
+                      border: 'none',
+                      background: 'transparent',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}
                   >
                     <Trash2 size={16} />
                   </button>
@@ -249,6 +341,10 @@ export default function InventoryPage() {
       )}
 
       {/* Edit Item Modal */}
+      {(() => {
+        console.log('Rendering edit modal check - editingItem:', editingItem);
+        return null;
+      })()}
       {editingItem && (
         <InventoryItemForm
           locations={locations}

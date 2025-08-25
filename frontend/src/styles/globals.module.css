@@ -250,6 +250,7 @@
 .borderB { border-bottom: 1px solid var(--border); }
 .borderL { border-left: 1px solid var(--border); }
 .borderR { border-right: 1px solid var(--border); }
+.borderDanger { border-color: var(--danger); }
 
 .rounded { border-radius: var(--radius-md); }
 .roundedSm { border-radius: var(--radius-sm); }
@@ -278,6 +279,37 @@
 .inlineBlock { display: inline-block; }
 .inline { display: inline; }
 .hidden { display: none; }
+
+/* Width utilities */
+.maxWMd { max-width: 28rem; }
+.maxWLg { max-width: 32rem; }
+.maxW2xl { max-width: 42rem; }
+
+/* Margin utilities */
+.mxAuto { margin-left: auto; margin-right: auto; }
+
+/* Padding utilities */
+.p12 { padding: 3rem; }
+.py16 { padding-top: 4rem; padding-bottom: 4rem; }
+.pt4 { padding-top: 1rem; }
+
+/* Background color utilities */
+.bgDanger { background-color: var(--danger); }
+.bgBlue { background-color: #3b82f6; }
+.bgGreen { background-color: #10b981; }
+.bgYellow { background-color: #f59e0b; }
+.bgPurple { background-color: #8b5cf6; }
+.bgGray { background-color: var(--gray-500); }
+
+/* Text color utilities for categories */
+.textBlue { color: #1e40af; }
+.textGreen { color: #047857; }
+.textYellow { color: #92400e; }
+.textPurple { color: #6b21a8; }
+.textGray { color: var(--gray-700); }
+
+/* Margin utilities */
+.mt1 { margin-top: 0.25rem; }
 
 /* Responsive visibility */
 @media (max-width: 639px) {
@@ -315,8 +347,59 @@
   border: 0;
 }
 
+/* Form utilities */
+input, textarea, select {
+  color: var(--text-primary) !important;
+  background-color: var(--bg-primary) !important;
+}
+
+input::placeholder {
+  color: var(--text-muted) !important;
+}
+
+/* Transition utilities */
+.transition {
+  transition: all 0.2s ease-in-out;
+}
+
+.transitionColors {
+  transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+}
+
+.transitionShadow {
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+.transitionTransform {
+  transition: transform 0.2s ease-in-out;
+}
+
+/* Interactive states for buttons and clickable elements */
+.interactive {
+  cursor: pointer;
+  user-select: none;
+}
+
+.interactive:hover {
+  opacity: 0.8;
+}
+
+.interactive:active {
+  transform: translateY(1px);
+}
+
+.interactive:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.interactive:disabled:hover {
+  opacity: 0.5;
+  transform: none;
+}
+
 /* High contrast mode support */
-@media (prefers-contrast: high) {
+@media (prefers-contrast: more) {
   :root {
     --border: #000000;
     --text-secondary: var(--text-primary);
