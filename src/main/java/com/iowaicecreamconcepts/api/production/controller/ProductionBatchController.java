@@ -3,7 +3,6 @@ package com.iowaicecreamconcepts.api.production.controller;
 import com.iowaicecreamconcepts.api.production.dto.*;
 import com.iowaicecreamconcepts.api.production.model.ProductionBatch;
 import com.iowaicecreamconcepts.api.production.service.ProductionBatchService;
-import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

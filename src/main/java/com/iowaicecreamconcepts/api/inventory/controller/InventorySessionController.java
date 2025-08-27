@@ -2,7 +2,9 @@ package com.iowaicecreamconcepts.api.inventory.controller;
 
 import com.iowaicecreamconcepts.api.inventory.model.*;
 import com.iowaicecreamconcepts.api.inventory.service.InventorySessionService;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -70,16 +72,16 @@ public class InventorySessionController {
     }
 
     // Request DTOs
+    @Setter
+    @Getter
     public static class CreateSessionRequest {
         private UUID locationId;
         private UUID startedBy;
-        
-        public UUID getLocationId() { return locationId; }
-        public void setLocationId(UUID locationId) { this.locationId = locationId; }
-        public UUID getStartedBy() { return startedBy; }
-        public void setStartedBy(UUID startedBy) { this.startedBy = startedBy; }
+
     }
 
+    @Setter
+    @Getter
     public static class AddSessionLineRequest {
         private UUID itemId;
         private Double count;
@@ -87,22 +89,12 @@ public class InventorySessionController {
         private String note;
         private String photoUrl;
 
-        public UUID getItemId() { return itemId; }
-        public void setItemId(UUID itemId) { this.itemId = itemId; }
-        public Double getCount() { return count; }
-        public void setCount(Double count) { this.count = count; }
-        public String getUnit() { return unit; }
-        public void setUnit(String unit) { this.unit = unit; }
-        public String getNote() { return note; }
-        public void setNote(String note) { this.note = note; }
-        public String getPhotoUrl() { return photoUrl; }
-        public void setPhotoUrl(String photoUrl) { this.photoUrl = photoUrl; }
     }
 
+    @Setter
+    @Getter
     public static class CloseSessionRequest {
         private UUID closedBy;
-        
-        public UUID getClosedBy() { return closedBy; }
-        public void setClosedBy(UUID closedBy) { this.closedBy = closedBy; }
+
     }
 }

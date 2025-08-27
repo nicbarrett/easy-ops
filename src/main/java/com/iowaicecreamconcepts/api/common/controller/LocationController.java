@@ -2,7 +2,9 @@ package com.iowaicecreamconcepts.api.common.controller;
 
 import com.iowaicecreamconcepts.api.common.model.Location;
 import com.iowaicecreamconcepts.api.common.repository.LocationRepository;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,16 +46,12 @@ public class LocationController {
     }
 
     // Request DTO
+    @Setter
+    @Getter
     public static class CreateLocationRequest {
         private String name;
         private Location.Type type;
         private UUID parentId;
 
-        public String getName() { return name; }
-        public void setName(String name) { this.name = name; }
-        public Location.Type getType() { return type; }
-        public void setType(Location.Type type) { this.type = type; }
-        public UUID getParentId() { return parentId; }
-        public void setParentId(UUID parentId) { this.parentId = parentId; }
     }
 }

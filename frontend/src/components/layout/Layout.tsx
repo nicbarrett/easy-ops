@@ -2,7 +2,6 @@ import React, { useState, ReactNode } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
   Menu,
-  X,
   Home,
   Package,
   Factory,

@@ -3,7 +3,6 @@ import { Navigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { LoginRequest } from '../../types/api';
 import styles from './LoginPage.module.css';
-import globals from '../../styles/globals.module.css';
 
 export default function LoginPage() {
   const { login, isAuthenticated } = useAuth();

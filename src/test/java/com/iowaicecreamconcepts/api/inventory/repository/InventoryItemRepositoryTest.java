@@ -72,7 +72,7 @@ class InventoryItemRepositoryTest {
 
         // Then
         assertThat(result).hasSize(1);
-        assertThat(result.get(0).getName()).isEqualTo("Vanilla Base");
+        assertThat(result.getFirst().getName()).isEqualTo("Vanilla Base");
     }
 
     @Test
@@ -82,7 +82,7 @@ class InventoryItemRepositoryTest {
 
         // Then
         assertThat(result).hasSize(1);
-        assertThat(result.get(0).getName()).isEqualTo("Chocolate Chips");
+        assertThat(result.getFirst().getName()).isEqualTo("Chocolate Chips");
     }
 
     @Test

@@ -13,10 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -219,7 +216,7 @@ class ProductionServiceTest {
     @Test
     void getBatchesByStatus_ShouldReturnBatchesWithStatus() {
         // Given
-        List<ProductionBatch> expectedBatches = Arrays.asList(testBatch);
+        List<ProductionBatch> expectedBatches = Collections.singletonList(testBatch);
         when(batchRepository.findByStatusOrderByCreatedAtDesc(ProductionBatch.Status.IN_PROGRESS))
                 .thenReturn(expectedBatches);
 
@@ -228,7 +225,7 @@ class ProductionServiceTest {
 
         // Then
         assertThat(result).hasSize(1);
-        assertThat(result.get(0).getStatus()).isEqualTo(ProductionBatch.Status.IN_PROGRESS);
+        assertThat(result.getFirst().getStatus()).isEqualTo(ProductionBatch.Status.IN_PROGRESS);
         verify(batchRepository).findByStatusOrderByCreatedAtDesc(ProductionBatch.Status.IN_PROGRESS);
     }
 
@@ -241,7 +238,7 @@ class ProductionServiceTest {
                 .reason(WasteEvent.WasteReason.SPOILAGE)
                 .build();
         
-        List<WasteEvent> expectedEvents = Arrays.asList(wasteEvent);
+        List<WasteEvent> expectedEvents = Collections.singletonList(wasteEvent);
         when(wasteEventRepository.findByBatchIdOrderByRecordedAtDesc(batchId)).thenReturn(expectedEvents);
 
         // When
@@ -249,7 +246,7 @@ class ProductionServiceTest {
 
         // Then
         assertThat(result).hasSize(1);
-        assertThat(result.get(0).getBatchId()).isEqualTo(batchId);
+        assertThat(result.getFirst().getBatchId()).isEqualTo(batchId);
         verify(wasteEventRepository).findByBatchIdOrderByRecordedAtDesc(batchId);
     }
 
@@ -262,7 +259,7 @@ class ProductionServiceTest {
                 .reason(WasteEvent.WasteReason.SPOILAGE)
                 .build();
         
-        List<WasteEvent> expectedEvents = Arrays.asList(wasteEvent);
+        List<WasteEvent> expectedEvents = Collections.singletonList(wasteEvent);
         when(wasteEventRepository.findByItemIdOrderByRecordedAtDesc(productItemId)).thenReturn(expectedEvents);
 
         // When
@@ -270,7 +267,7 @@ class ProductionServiceTest {
 
         // Then
         assertThat(result).hasSize(1);
-        assertThat(result.get(0).getItemId()).isEqualTo(productItemId);
+        assertThat(result.getFirst().getItemId()).isEqualTo(productItemId);
         verify(wasteEventRepository).findByItemIdOrderByRecordedAtDesc(productItemId);
     }
 }

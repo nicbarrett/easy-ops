@@ -129,23 +129,6 @@ export interface WasteEvent {
 
 export type WasteReason = 'SPOILAGE' | 'TEMPERATURE_EXCURSION' | 'QA_FAILURE' | 'ACCIDENT' | 'OTHER';
 
-// API Response types
-export interface ApiResponse<T> {
-  data: T;
-  message?: string;
-  success: boolean;
-}
-
-export interface PaginatedResponse<T> {
-  content: T[];
-  totalElements: number;
-  totalPages: number;
-  size: number;
-  number: number;
-  first: boolean;
-  last: boolean;
-}
-
 // Auth types
 export interface LoginRequest {
   email: string;

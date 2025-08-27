@@ -9,10 +9,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -128,7 +125,7 @@ class AuthServiceTest {
     @Test
     void getActiveUsers_ShouldReturnActiveUsers() {
         // Given
-        List<User> expectedUsers = Arrays.asList(testUser);
+        List<User> expectedUsers = Collections.singletonList(testUser);
         when(userRepository.findByIsActiveTrue()).thenReturn(expectedUsers);
 
         // When
@@ -136,14 +133,14 @@ class AuthServiceTest {
 
         // Then
         assertThat(result).hasSize(1);
-        assertThat(result.get(0)).isEqualTo(testUser);
+        assertThat(result.getFirst()).isEqualTo(testUser);
         verify(userRepository).findByIsActiveTrue();
     }
 
     @Test
     void getUsersByRole_ShouldReturnUsersWithRole() {
         // Given
-        List<User> expectedUsers = Arrays.asList(testUser);
+        List<User> expectedUsers = Collections.singletonList(testUser);
         when(userRepository.findByRole(User.Role.TEAM_MEMBER)).thenReturn(expectedUsers);
 
         // When
@@ -151,7 +148,7 @@ class AuthServiceTest {
 
         // Then
         assertThat(result).hasSize(1);
-        assertThat(result.get(0).getRole()).isEqualTo(User.Role.TEAM_MEMBER);
+        assertThat(result.getFirst().getRole()).isEqualTo(User.Role.TEAM_MEMBER);
         verify(userRepository).findByRole(User.Role.TEAM_MEMBER);
     }
 

@@ -2,7 +2,9 @@ package com.iowaicecreamconcepts.api.production.controller;
 
 import com.iowaicecreamconcepts.api.production.model.ProductionRequest;
 import com.iowaicecreamconcepts.api.production.service.ProductionRequestService;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -74,6 +76,8 @@ public class ProductionRequestController {
     }
 
     // Request DTOs
+    @Setter
+    @Getter
     public static class CreateProductionRequestRequest {
         private UUID productItemId;
         private UUID locationId;
@@ -84,28 +88,12 @@ public class ProductionRequestController {
         private ProductionRequest.Priority priority;
         private String reason;
 
-        public UUID getProductItemId() { return productItemId; }
-        public void setProductItemId(UUID productItemId) { this.productItemId = productItemId; }
-        public UUID getLocationId() { return locationId; }
-        public void setLocationId(UUID locationId) { this.locationId = locationId; }
-        public UUID getRequestedBy() { return requestedBy; }
-        public void setRequestedBy(UUID requestedBy) { this.requestedBy = requestedBy; }
-        public LocalDateTime getNeededBy() { return neededBy; }
-        public void setNeededBy(LocalDateTime neededBy) { this.neededBy = neededBy; }
-        public Double getTargetQuantity() { return targetQuantity; }
-        public void setTargetQuantity(Double targetQuantity) { this.targetQuantity = targetQuantity; }
-        public String getUnit() { return unit; }
-        public void setUnit(String unit) { this.unit = unit; }
-        public ProductionRequest.Priority getPriority() { return priority; }
-        public void setPriority(ProductionRequest.Priority priority) { this.priority = priority; }
-        public String getReason() { return reason; }
-        public void setReason(String reason) { this.reason = reason; }
     }
 
+    @Setter
+    @Getter
     public static class UpdateRequestStatusRequest {
         private ProductionRequest.Status status;
 
-        public ProductionRequest.Status getStatus() { return status; }
-        public void setStatus(ProductionRequest.Status status) { this.status = status; }
     }
 }

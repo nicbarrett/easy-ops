@@ -13,10 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -74,7 +71,7 @@ class InventorySessionServiceTest {
     @Test
     void getSessionsByLocation_ShouldReturnSessionsForLocation() {
         // Given
-        List<InventorySession> expectedSessions = Arrays.asList(testSession);
+        List<InventorySession> expectedSessions = Collections.singletonList(testSession);
         when(sessionRepository.findByLocationIdOrderByStartedAtDesc(locationId)).thenReturn(expectedSessions);
 
         // When
@@ -82,7 +79,7 @@ class InventorySessionServiceTest {
 
         // Then
         assertThat(result).hasSize(1);
-        assertThat(result.get(0)).isEqualTo(testSession);
+        assertThat(result.getFirst()).isEqualTo(testSession);
         verify(sessionRepository).findByLocationIdOrderByStartedAtDesc(locationId);
     }
 
@@ -163,7 +160,7 @@ class InventorySessionServiceTest {
                 .build();
         
         when(sessionLineRepository.findBySessionIdOrderByCreatedAt(sessionId))
-                .thenReturn(Arrays.asList(line));
+                .thenReturn(Collections.singletonList(line));
         when(sessionRepository.save(testSession)).thenReturn(testSession);
         when(currentStockRepository.findByItemIdAndLocationId(itemId, locationId))
                 .thenReturn(Optional.empty());
@@ -184,7 +181,7 @@ class InventorySessionServiceTest {
         // Given
         when(sessionRepository.findById(sessionId)).thenReturn(Optional.of(testSession));
         when(sessionLineRepository.findBySessionIdOrderByCreatedAt(sessionId))
-                .thenReturn(Arrays.asList());
+                .thenReturn(List.of());
 
         // When/Then
         assertThatThrownBy(() -> inventorySessionService.closeSession(sessionId, userId))

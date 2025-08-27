@@ -3,7 +3,6 @@ import { Trash2, Plus, AlertTriangle, Calendar, User, Package, Factory, X } from
 import apiClient from '../../services/api';
 import { WasteEvent, InventoryItem, ProductionBatch, RecordWasteRequest, WasteReason } from '../../types/api';
 import { format } from 'date-fns';
-import ConfirmationModal from '../../components/common/ConfirmationModal';
 import globals from '../../styles/globals.module.css';
 
 export default function WasteTrackingPage() {

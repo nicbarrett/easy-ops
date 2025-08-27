@@ -4,8 +4,7 @@ import {
   TrendingUp, 
   Package, 
   Factory,
-  Clock,
-  Users
+  Clock
 } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import apiClient from '../../services/api';

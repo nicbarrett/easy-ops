@@ -98,7 +98,7 @@ class UserRepositoryTest {
 
         // Then
         assertThat(result).hasSize(1);
-        assertThat(result.get(0).getName()).isEqualTo("Admin User");
+        assertThat(result.getFirst().getName()).isEqualTo("Admin User");
     }
 
     @Test

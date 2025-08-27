@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Package, Plus, Clock, CheckCircle, User, MapPin, Camera, X } from 'lucide-react';
+import { Package, Plus, Clock, CheckCircle, MapPin, Camera, X } from 'lucide-react';
 import apiClient from '../../services/api';
-import { InventorySession, InventoryItem, Location, CreateSessionRequest, AddSessionLineRequest } from '../../types/api';
+import { InventorySession, InventoryItem, Location, AddSessionLineRequest } from '../../types/api';
 import { format } from 'date-fns';
 import ConfirmationModal from '../../components/common/ConfirmationModal';
 import globals from '../../styles/globals.module.css';
@@ -32,11 +32,11 @@ export default function InventorySessionsPage() {
       setSessions(sessionsData);
       setItems(itemsData);
       setLocations(locationsData);
-      
+
       // Find active session
       const active = sessionsData.find(s => s.status === 'DRAFT');
       setActiveSession(active || null);
-      
+
       setError(null);
     } catch (err) {
       setError('Failed to load session data');
@@ -101,7 +101,7 @@ export default function InventorySessionsPage() {
             Track inventory counting sessions and stock levels
           </p>
         </div>
-        <button 
+        <button
           onClick={() => setShowStartModal(true)}
           disabled={!!activeSession}
           className={`${globals.flex} ${globals.itemsCenter} ${globals.gap2} ${globals.px4} ${globals.py3} ${globals.bgPrimary} ${globals.textPrimary} ${globals.border} ${globals.rounded} ${globals.shadowSm} ${activeSession ? globals.opacity50 : ''}`}
@@ -134,14 +134,14 @@ export default function InventorySessionsPage() {
               </div>
             </div>
             <div className={`${globals.flex} ${globals.gap2}`}>
-              <button 
+              <button
                 onClick={() => setShowAddItemModal(true)}
                 className={`${globals.flex} ${globals.itemsCenter} ${globals.gap2} ${globals.px3} ${globals.py2} ${globals.bgSecondary} ${globals.textPrimary} ${globals.rounded}`}
               >
                 <Plus size={16} />
                 Add Item
               </button>
-              <button 
+              <button
                 onClick={() => setClosingSession(activeSession)}
                 className={`${globals.px3} ${globals.py2} ${globals.bgGreen} ${globals.textPrimary} ${globals.rounded}`}
               >
@@ -185,7 +185,7 @@ export default function InventorySessionsPage() {
       {/* Recent Sessions */}
       <div>
         <h2 className={`${globals.text2xl} ${globals.fontSemibold} ${globals.mb6}`}>Recent Sessions</h2>
-        
+
         {sessions.filter(s => s.status === 'CLOSED').length === 0 ? (
           <div className={`${globals.bgPrimary} ${globals.border} ${globals.rounded} ${globals.p12} ${globals.textCenter}`}>
             <Package size={64} className={`${globals.mb4} ${globals.textMuted}`} />
@@ -193,7 +193,7 @@ export default function InventorySessionsPage() {
             <p className={`${globals.textMuted} ${globals.mb6}`}>
               Start your first inventory session to track stock levels and maintain accurate counts.
             </p>
-            <button 
+            <button
               onClick={() => setShowStartModal(true)}
               disabled={!!activeSession}
               className={`${globals.flex} ${globals.itemsCenter} ${globals.gap2} ${globals.px6} ${globals.py3} ${globals.bgPrimary} ${globals.textPrimary} ${globals.rounded} ${globals.mxAuto} ${activeSession ? globals.opacity50 : ''}`}
@@ -219,7 +219,7 @@ export default function InventorySessionsPage() {
                       </p>
                     </div>
                   </div>
-                  
+
                   <div className={`${globals.grid} ${globals.gridCols2} ${globals.gap4} ${globals.textSm} ${globals.mb4}`}>
                     <div>
                       <span className={`${globals.textMuted}`}>Started:</span>
@@ -232,7 +232,7 @@ export default function InventorySessionsPage() {
                       </p>
                     </div>
                   </div>
-                  
+
                   <div className={`${globals.pt4} ${globals.borderT}`}>
                     <button className={`${globals.textSm} ${globals.textPrimary} ${globals.underline}`}>
                       View Details
@@ -252,7 +252,7 @@ export default function InventorySessionsPage() {
             <p className={`${globals.textMuted} ${globals.mb6}`}>
               Choose a location to begin counting inventory. You can only have one active session at a time.
             </p>
-            
+
             <div className={`${globals.spaceY3} ${globals.mb6}`}>
               {locations.map((location) => (
                 <button
@@ -271,9 +271,9 @@ export default function InventorySessionsPage() {
                 </button>
               ))}
             </div>
-            
+
             <div className={`${globals.flex} ${globals.justifyEnd}`}>
-              <button 
+              <button
                 onClick={() => setShowStartModal(false)}
                 className={`${globals.px4} ${globals.py2} ${globals.border} ${globals.rounded} ${globals.textMuted}`}
               >
@@ -316,7 +316,6 @@ export default function InventorySessionsPage() {
     </div>
   );
 }
-
 // Add Item to Session Modal Component
 interface AddItemToSessionModalProps {
   session: InventorySession;

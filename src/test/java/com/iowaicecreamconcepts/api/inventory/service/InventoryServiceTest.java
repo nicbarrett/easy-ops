@@ -9,10 +9,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -47,7 +44,7 @@ class InventoryServiceTest {
     @Test
     void getAllItems_ShouldReturnActiveItems() {
         // Given
-        List<InventoryItem> expectedItems = Arrays.asList(testItem);
+        List<InventoryItem> expectedItems = Collections.singletonList(testItem);
         when(repository.findByIsActiveTrueOrderByName()).thenReturn(expectedItems);
 
         // When
@@ -55,7 +52,7 @@ class InventoryServiceTest {
 
         // Then
         assertThat(result).hasSize(1);
-        assertThat(result.get(0).getName()).isEqualTo("Test Item");
+        assertThat(result.getFirst().getName()).isEqualTo("Test Item");
         verify(repository).findByIsActiveTrueOrderByName();
     }
 
@@ -186,7 +183,7 @@ class InventoryServiceTest {
     @Test
     void getItemsByCategory_ShouldReturnItemsOfCategory() {
         // Given
-        List<InventoryItem> expectedItems = Arrays.asList(testItem);
+        List<InventoryItem> expectedItems = Collections.singletonList(testItem);
         when(repository.findByCategory(InventoryItem.Category.BASE)).thenReturn(expectedItems);
 
         // When
@@ -194,7 +191,7 @@ class InventoryServiceTest {
 
         // Then
         assertThat(result).hasSize(1);
-        assertThat(result.get(0).getCategory()).isEqualTo(InventoryItem.Category.BASE);
+        assertThat(result.getFirst().getCategory()).isEqualTo(InventoryItem.Category.BASE);
         verify(repository).findByCategory(InventoryItem.Category.BASE);
     }
 
@@ -202,7 +199,7 @@ class InventoryServiceTest {
     void getItemsByLocation_ShouldReturnItemsOfLocation() {
         // Given
         UUID locationId = UUID.randomUUID();
-        List<InventoryItem> expectedItems = Arrays.asList(testItem);
+        List<InventoryItem> expectedItems = Collections.singletonList(testItem);
         when(repository.findByDefaultLocationId(locationId)).thenReturn(expectedItems);
 
         // When
