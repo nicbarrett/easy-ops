@@ -2,9 +2,13 @@
 
 export interface User {
   id: string;
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
+  phone?: string;
   role: UserRole;
+  permissions: string[];
+  assignedLocationIds: string[];
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
@@ -31,12 +35,15 @@ export interface InventoryItem {
   defaultLocationId?: string;
   sku?: string;
   notes?: string;
+  supplierInfo?: string;
+  unitCost?: number;
+  restockLevel?: number;
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
 }
 
-export type InventoryCategory = 'BASE' | 'MIX_IN' | 'PACKAGING' | 'BEVERAGE';
+export type InventoryCategory = 'BASE' | 'MIX_IN' | 'PACKAGING' | 'BEVERAGE' | 'BAKED_GOODS' | 'PREPARED_ITEMS';
 
 export interface InventorySession {
   id: string;
@@ -129,6 +136,54 @@ export interface WasteEvent {
 
 export type WasteReason = 'SPOILAGE' | 'TEMPERATURE_EXCURSION' | 'QA_FAILURE' | 'ACCIDENT' | 'OTHER';
 
+// Recipe and Production Item types
+export interface Recipe {
+  id: string;
+  name: string;
+  productItemId: string;
+  yieldQuantity: number;
+  yieldUnit: string;
+  instructions?: string;
+  notes?: string;
+  ingredients: RecipeIngredient[];
+  totalCost: number;
+  costPerUnit: number;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface RecipeIngredient {
+  id: string;
+  ingredientItemId: string;
+  quantity: number;
+  unit: string;
+  unitCost?: number;
+  totalCost?: number;
+  notes?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ProductionItem {
+  id: string;
+  name: string;
+  category: ProductionCategory;
+  unit: string;
+  parStockLevel: number;
+  restockLevel?: number;
+  recipe?: Recipe;
+  productionCost?: number;
+  sellingPrice?: number;
+  sku?: string;
+  notes?: string;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type ProductionCategory = 'ICE_CREAM' | 'BAKED_GOODS' | 'PREPARED_ITEMS' | 'BEVERAGES' | 'SPECIALTY_ITEMS';
+
 // Auth types
 export interface LoginRequest {
   email: string;
@@ -159,6 +214,9 @@ export interface InventoryItemRequest {
   defaultLocationId?: string;
   sku?: string;
   notes?: string;
+  supplierInfo?: string;
+  unitCost?: number;
+  restockLevel?: number;
 }
 
 export interface CreateSessionRequest {

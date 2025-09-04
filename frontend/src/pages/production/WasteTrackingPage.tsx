@@ -251,7 +251,7 @@ export default function WasteTrackingPage() {
                           </div>
                           <div className={`${globals.flex} ${globals.itemsCenter} ${globals.gap1} ${globals.textSm} ${globals.textMuted}`}>
                             <User size={14} />
-                            <span>{event.recordedByUser?.name || 'Unknown User'}</span>
+                            <span>{event.recordedByUser ? `${event.recordedByUser.firstName} ${event.recordedByUser.lastName}` : 'Unknown User'}</span>
                           </div>
                         </div>
                         

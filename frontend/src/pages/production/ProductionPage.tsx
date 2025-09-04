@@ -231,7 +231,7 @@ export default function ProductionPage() {
                     
                     <div className={`${globals.flex} ${globals.itemsCenter} ${globals.gap2} ${globals.mb2} ${globals.textSm} ${globals.textMuted}`}>
                       <User size={14} />
-                      <span>{request.requestedByUser?.name || 'Unknown User'}</span>
+                      <span>{request.requestedByUser ? `${request.requestedByUser.firstName} ${request.requestedByUser.lastName}` : 'Unknown User'}</span>
                     </div>
                     
                     <p className={`${globals.textSm} ${globals.mb2}`}>{request.reason}</p>
@@ -278,7 +278,7 @@ export default function ProductionPage() {
                     
                     <div className={`${globals.flex} ${globals.itemsCenter} ${globals.gap2} ${globals.mb2} ${globals.textSm} ${globals.textMuted}`}>
                       <User size={14} />
-                      <span>{request.requestedByUser?.name || 'Unknown User'}</span>
+                      <span>{request.requestedByUser ? `${request.requestedByUser.firstName} ${request.requestedByUser.lastName}` : 'Unknown User'}</span>
                     </div>
                     
                     <p className={`${globals.textSm} ${globals.mb2}`}>{request.reason}</p>
@@ -372,7 +372,7 @@ export default function ProductionPage() {
                     
                     <div className={`${globals.flex} ${globals.itemsCenter} ${globals.gap2} ${globals.mb2} ${globals.textSm} ${globals.textMuted}`}>
                       <User size={14} />
-                      <span>{batch.madeByUser?.name || 'Unknown User'}</span>
+                      <span>{batch.madeByUser ? `${batch.madeByUser.firstName} ${batch.madeByUser.lastName}` : 'Unknown User'}</span>
                     </div>
                     
                     <div className={`${globals.flex} ${globals.itemsCenter} ${globals.gap2} ${globals.mb2} ${globals.textSm} ${globals.textMuted}`}>

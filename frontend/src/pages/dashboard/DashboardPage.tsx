@@ -76,7 +76,7 @@ export default function DashboardPage() {
       <div className={styles.header}>
         <div>
           <h1 className={styles.greeting}>
-            {getGreeting()}, {user?.name}!
+            {getGreeting()}, {user?.firstName}!
           </h1>
           <p className={styles.subtitle}>
             Here's what's happening at Sweet Swirls today

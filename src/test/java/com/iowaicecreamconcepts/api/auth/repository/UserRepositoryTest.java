@@ -30,7 +30,8 @@ class UserRepositoryTest {
     @BeforeEach
     void setUp() {
         adminUser = User.builder()
-                .name("Admin User")
+                .firstName("Admin")
+                .lastName("User")
                 .email("admin@test.com")
                 .passwordHash("hashedPassword1")
                 .role(User.Role.ADMIN)
@@ -38,7 +39,8 @@ class UserRepositoryTest {
                 .build();
 
         teamMember = User.builder()
-                .name("Team Member")
+                .firstName("Team")
+                .lastName("Member")
                 .email("member@test.com")
                 .passwordHash("hashedPassword2")
                 .role(User.Role.TEAM_MEMBER)
@@ -46,7 +48,8 @@ class UserRepositoryTest {
                 .build();
 
         inactiveUser = User.builder()
-                .name("Inactive User")
+                .firstName("Inactive")
+                .lastName("User")
                 .email("inactive@test.com")
                 .passwordHash("hashedPassword3")
                 .role(User.Role.TEAM_MEMBER)
@@ -65,7 +68,7 @@ class UserRepositoryTest {
 
         // Then
         assertThat(result).isPresent();
-        assertThat(result.get().getName()).isEqualTo("Admin User");
+        assertThat(result.get().getFullName()).isEqualTo("Admin User");
         assertThat(result.get().getRole()).isEqualTo(User.Role.ADMIN);
     }
 
@@ -87,7 +90,7 @@ class UserRepositoryTest {
         assertThat(result).hasSize(2); // teamMember and inactiveUser
         assertThat(result).extracting(User::getRole)
                 .containsOnly(User.Role.TEAM_MEMBER);
-        assertThat(result).extracting(User::getName)
+        assertThat(result).extracting(User::getFullName)
                 .containsExactlyInAnyOrder("Team Member", "Inactive User");
     }
 
@@ -98,7 +101,7 @@ class UserRepositoryTest {
 
         // Then
         assertThat(result).hasSize(1);
-        assertThat(result.getFirst().getName()).isEqualTo("Admin User");
+        assertThat(result.getFirst().getFullName()).isEqualTo("Admin User");
     }
 
     @Test
@@ -109,7 +112,7 @@ class UserRepositoryTest {
         // Then
         assertThat(result).hasSize(2);
         assertThat(result).extracting(User::getIsActive).containsOnly(true);
-        assertThat(result).extracting(User::getName)
+        assertThat(result).extracting(User::getFullName)
                 .containsExactlyInAnyOrder("Admin User", "Team Member");
     }
 

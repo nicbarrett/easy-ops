@@ -4,6 +4,7 @@ import com.iowaicecreamconcepts.api.inventory.model.InventoryItem;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Data
@@ -30,4 +31,12 @@ public class InventoryItemRequest {
     private String sku;
 
     private String notes;
+
+    private String supplierInfo;
+
+    @PositiveOrZero
+    private BigDecimal unitCost;
+
+    @PositiveOrZero
+    private Double restockLevel;
 }

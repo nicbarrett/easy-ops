@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -14,17 +15,24 @@ import java.util.UUID;
 public class AuthService {
 
     private final UserRepository userRepository;
+    private final PermissionService permissionService;
 
-    public User createUser(String name, String email, String passwordHash, User.Role role) {
+    public User createUser(String firstName, String lastName, String email, String phone, 
+                          String passwordHash, User.Role role) {
         if (userRepository.existsByEmail(email)) {
             throw new RuntimeException("User with email already exists");
         }
 
+        Set<String> defaultPermissions = permissionService.getDefaultPermissionsForRole(role);
+
         User user = User.builder()
-                .name(name)
+                .firstName(firstName)
+                .lastName(lastName)
                 .email(email)
+                .phone(phone)
                 .passwordHash(passwordHash)
                 .role(role)
+                .permissions(defaultPermissions)
                 .build();
 
         return userRepository.save(user);
@@ -50,6 +58,20 @@ public class AuthService {
     public User updateUserRole(UUID userId, User.Role role) {
         User user = getUser(userId);
         user.setRole(role);
+        Set<String> defaultPermissions = permissionService.getDefaultPermissionsForRole(role);
+        user.setPermissions(defaultPermissions);
+        return userRepository.save(user);
+    }
+
+    public User updateUserPermissions(UUID userId, Set<String> permissions) {
+        User user = getUser(userId);
+        user.setPermissions(permissions);
+        return userRepository.save(user);
+    }
+
+    public User assignUserToLocations(UUID userId, Set<UUID> locationIds) {
+        User user = getUser(userId);
+        user.setAssignedLocationIds(locationIds);
         return userRepository.save(user);
     }
 

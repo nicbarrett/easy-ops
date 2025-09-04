@@ -115,10 +115,10 @@ export function Layout({ children }: LayoutProps) {
                 aria-label="User menu"
               >
                 <div className={styles.userAvatar}>
-                  {user.name.charAt(0).toUpperCase()}
+                  {user.firstName?.charAt(0).toUpperCase() || 'U'}
                 </div>
                 <div className={styles.userInfo}>
-                  <div className={styles.userName}>{user.name}</div>
+                  <div className={styles.userName}>{user.firstName} {user.lastName}</div>
                   <div className={styles.userRole}>
                     {user.role.replace('_', ' ').toLowerCase()}
                   </div>

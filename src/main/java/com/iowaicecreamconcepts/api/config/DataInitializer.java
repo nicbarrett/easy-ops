@@ -2,6 +2,7 @@ package com.iowaicecreamconcepts.api.config;
 
 import com.iowaicecreamconcepts.api.auth.model.User;
 import com.iowaicecreamconcepts.api.auth.repository.UserRepository;
+import com.iowaicecreamconcepts.api.auth.service.PermissionService;
 import com.iowaicecreamconcepts.api.common.model.Location;
 import com.iowaicecreamconcepts.api.common.repository.LocationRepository;
 import com.iowaicecreamconcepts.api.inventory.model.InventoryItem;
@@ -27,6 +28,7 @@ public class DataInitializer implements CommandLineRunner {
     private final UserRepository userRepository;
     private final InventoryItemRepository inventoryItemRepository;
     private final PasswordEncoder passwordEncoder;
+    private final PermissionService permissionService;
 
     @Value("${app.admin.email:admin@sweetswirls.com}")
     private String adminEmail;
@@ -83,28 +85,36 @@ public class DataInitializer implements CommandLineRunner {
         if (userRepository.count() == 0) {
             List<User> users = Arrays.asList(
                     User.builder()
-                            .name(adminName)
+                            .firstName("System")
+                            .lastName("Administrator")
                             .email(adminEmail)
                             .passwordHash(passwordEncoder.encode(adminPassword))
                             .role(User.Role.ADMIN)
+                            .permissions(permissionService.getDefaultPermissionsForRole(User.Role.ADMIN))
                             .build(),
                     User.builder()
-                            .name("Production Lead")
+                            .firstName("Production")
+                            .lastName("Lead")
                             .email("production@sweetswirls.com")
                             .passwordHash(passwordEncoder.encode("production123"))
                             .role(User.Role.PRODUCTION_LEAD)
+                            .permissions(permissionService.getDefaultPermissionsForRole(User.Role.PRODUCTION_LEAD))
                             .build(),
                     User.builder()
-                            .name("Shift Lead")
+                            .firstName("Shift")
+                            .lastName("Lead")
                             .email("shift@sweetswirls.com")
                             .passwordHash(passwordEncoder.encode("shift123"))
                             .role(User.Role.SHIFT_LEAD)
+                            .permissions(permissionService.getDefaultPermissionsForRole(User.Role.SHIFT_LEAD))
                             .build(),
                     User.builder()
-                            .name("Team Member")
+                            .firstName("Team")
+                            .lastName("Member")
                             .email("team@sweetswirls.com")
                             .passwordHash(passwordEncoder.encode("team123"))
                             .role(User.Role.TEAM_MEMBER)
+                            .permissions(permissionService.getDefaultPermissionsForRole(User.Role.TEAM_MEMBER))
                             .build()
             );
 

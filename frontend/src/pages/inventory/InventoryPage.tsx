@@ -107,7 +107,9 @@ export default function InventoryPage() {
       BASE: `${globals.bgBlue} ${globals.textBlue}`,
       MIX_IN: `${globals.bgGreen} ${globals.textGreen}`,
       PACKAGING: `${globals.bgYellow} ${globals.textYellow}`,
-      BEVERAGE: `${globals.bgPurple} ${globals.textPurple}`
+      BEVERAGE: `${globals.bgPurple} ${globals.textPurple}`,
+      BAKED_GOODS: `${globals.bgOrange} ${globals.textOrange}`,
+      PREPARED_ITEMS: `${globals.bgTeal} ${globals.textTeal}`
     };
     return colors[category] || `${globals.bgGray} ${globals.textGray}`;
   };

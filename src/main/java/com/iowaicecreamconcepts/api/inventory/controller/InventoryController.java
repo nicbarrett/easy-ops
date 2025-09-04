@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,6 +33,7 @@ public class InventoryController {
     }
 
     @GetMapping
+    @PreAuthorize("hasPermission(null, 'inventory:item:r')")
     @Operation(
         summary = "Get all inventory items",
         description = "Retrieve a complete list of all inventory items including their current stock levels, par levels, and locations. Results include both active and inactive items."
@@ -76,6 +78,7 @@ public class InventoryController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasPermission(null, 'inventory:item:r')")
     @Operation(
         summary = "Get inventory item by ID",
         description = "Retrieve a specific inventory item by its unique identifier, including detailed information about stock levels, location, and supplier details."
@@ -136,6 +139,7 @@ public class InventoryController {
     }
 
     @PostMapping
+    @PreAuthorize("hasPermission(null, 'inventory:item:rw')")
     @Operation(
         summary = "Create new inventory item",
         description = "Create a new inventory item with specified details including name, category, unit, par stock level, and location. Item names must be unique.",
@@ -234,6 +238,7 @@ public class InventoryController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasPermission(null, 'inventory:item:rw')")
     @Operation(
         summary = "Update inventory item",
         description = "Update an existing inventory item's details. All fields in the request will replace the current values.",
@@ -339,6 +344,7 @@ public class InventoryController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasPermission(null, 'inventory:item:rw')")
     @Operation(
         summary = "Delete inventory item",
         description = "Soft delete an inventory item. The item will be marked as inactive but not permanently removed from the database to preserve audit trails and historical data."

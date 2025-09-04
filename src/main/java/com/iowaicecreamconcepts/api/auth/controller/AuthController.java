@@ -104,7 +104,7 @@ public class AuthController {
         
         LoginResponse response = new LoginResponse();
         response.setUserId(user.getId());
-        response.setName(user.getName());
+        response.setName(user.getFullName());
         response.setEmail(user.getEmail());
         response.setRole(user.getRole());
         response.setToken(token);
@@ -193,9 +193,15 @@ public class AuthController {
         // Hash password properly
         String passwordHash = passwordEncoder.encode(request.getPassword());
         
+        String[] nameParts = request.getName().split(" ", 2);
+        String firstName = nameParts[0];
+        String lastName = nameParts.length > 1 ? nameParts[1] : "";
+
         User user = authService.createUser(
-                request.getName(),
+                firstName,
+                lastName,
                 request.getEmail(),
+                null, // phone not in request
                 passwordHash,
                 request.getRole()
         );

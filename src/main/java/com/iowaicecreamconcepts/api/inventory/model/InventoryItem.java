@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -47,6 +48,14 @@ public class InventoryItem {
 
     private String notes;
 
+    private String supplierInfo;
+
+    @PositiveOrZero
+    private BigDecimal unitCost;
+
+    @PositiveOrZero
+    private Double restockLevel;
+
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
@@ -74,6 +83,9 @@ public class InventoryItem {
                 .defaultLocationId(request.getDefaultLocationId())
                 .sku(request.getSku())
                 .notes(request.getNotes())
+                .supplierInfo(request.getSupplierInfo())
+                .unitCost(request.getUnitCost())
+                .restockLevel(request.getRestockLevel())
                 .build();
     }
 
@@ -81,6 +93,8 @@ public class InventoryItem {
         BASE,
         MIX_IN,
         PACKAGING,
-        BEVERAGE
+        BEVERAGE,
+        BAKED_GOODS,
+        PREPARED_ITEMS
     }
 }

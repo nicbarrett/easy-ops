@@ -42,11 +42,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
     const response = await apiClient.login(credentials);
     
     // The user data is returned in the login response
+    const nameParts = response.name.split(' ', 2);
     const userData: User = {
       id: response.userId,
-      name: response.name,
+      firstName: nameParts[0] || '',
+      lastName: nameParts[1] || '',
       email: response.email,
       role: response.role,
+      permissions: [], // Will be populated from backend in full implementation
+      assignedLocationIds: [],
       isActive: true,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
