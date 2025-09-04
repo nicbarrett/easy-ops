@@ -6,25 +6,39 @@ export class LoginPage extends BasePage {
     super(page);
   }
 
-  // Elements
+  // Accessibility-first elements with fallbacks for current implementation
   get emailInput(): Locator {
-    return this.page.locator('#email');
+    // Prefer getByLabel, fallback to ID (encourages proper labeling)
+    return this.page.getByLabel(/email/i).or(this.page.locator('#email'));
   }
 
   get passwordInput(): Locator {
-    return this.page.locator('#password');
+    // Prefer getByLabel, fallback to ID (encourages proper labeling)  
+    return this.page.getByLabel(/password/i).or(this.page.locator('#password'));
   }
 
   get loginButton(): Locator {
-    return this.page.locator('button[type="submit"]');
+    // Prefer accessible button, fallback to submit button
+    return this.page.getByRole('button', { name: /sign in|login|log in/i })
+      .or(this.page.locator('button[type="submit"]'));
   }
 
   get errorMessage(): Locator {
-    return this.page.locator('text=Invalid email or password');
+    // Prefer alert role, fallback to current implementation
+    return this.page.getByRole('alert')
+      .or(this.page.locator('text=Invalid email or password'));
   }
 
   get forgotPasswordLink(): Locator {
-    return this.page.locator('[data-testid="forgot-password-link"]');
+    // Accessible link selector
+    return this.page.getByRole('link', { name: /forgot.*password/i });
+  }
+
+  // Page heading for accessibility verification
+  get pageHeading(): Locator {
+    // Prefer semantic heading, fallback to any heading on login page
+    return this.page.getByRole('heading', { name: /sign in|login/i })
+      .or(this.page.getByRole('heading').first());
   }
 
   // Actions

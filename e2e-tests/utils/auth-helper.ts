@@ -21,8 +21,9 @@ export class AuthHelper {
   }
 
   async logout() {
-    await this.page.click('button[aria-label="User menu"]');
-    await this.page.click('button:has-text("Sign Out")');
+    // Use accessibility-first approach to find user menu and logout
+    await this.page.getByRole('button', { name: /user menu|account|profile/i }).click();
+    await this.page.getByRole('button', { name: /sign out|logout|log out/i }).click();
     await this.page.waitForURL('/login');
   }
 

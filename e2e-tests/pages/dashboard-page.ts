@@ -36,25 +36,43 @@ export class DashboardPage extends BasePage {
     return this.page.getByRole('button', { name: /refresh|reload/i });
   }
 
-  // Navigation elements (works for both desktop and mobile)
+  // Accessibility-first navigation with fallbacks
   get inventoryLink(): Locator {
-    return this.page.locator('a[href="/inventory"]:visible').first();
+    // Prefer accessible role, fallback to visible link (handles duplicates)
+    return this.page.getByRole('link', { name: /inventory/i }).first()
+      .or(this.page.locator('a[href="/inventory"]:visible').first());
   }
 
   get productionLink(): Locator {
-    return this.page.locator('a[href="/production"]:visible').first();
+    return this.page.getByRole('link', { name: /production/i }).first()
+      .or(this.page.locator('a[href="/production"]:visible').first());
   }
 
   get usersLink(): Locator {
-    return this.page.locator('a[href="/users"]:visible').first();
+    return this.page.getByRole('link', { name: /users/i }).first()
+      .or(this.page.locator('a[href="/users"]:visible').first());
   }
 
   get settingsLink(): Locator {
-    return this.page.locator('a[href="/settings"]:visible').first();
+    return this.page.getByRole('link', { name: /settings/i }).first()
+      .or(this.page.locator('a[href="/settings"]:visible').first());
   }
 
-  get userNameDisplay(): Locator {
-    return this.page.locator('text=System Administrator');
+  get userMenuButton(): Locator {
+    // Look for accessible user menu button with fallback
+    return this.page.getByRole('button', { name: /user menu|account|profile/i })
+      .or(this.page.locator('button[aria-label*="user"]').first());
+  }
+
+  get logoutButton(): Locator {
+    return this.page.getByRole('button', { name: /sign out|logout|log out/i })
+      .or(this.page.locator('button:has-text("Sign Out")'));
+  }
+
+  get mobileMenuButton(): Locator {
+    // Be more specific - mobile menu typically has "Toggle" or "hamburger" in the name
+    return this.page.getByRole('button', { name: /toggle menu/i })
+      .or(this.page.locator('button[aria-label="Toggle menu"]'));
   }
 
   // Low stock alerts
