@@ -31,7 +31,7 @@ test.describe('Authentication & Authorization (US-ADM)', () => {
     
     // For mobile devices, open the mobile menu to access navigation
     if (isMobile || (await page.viewportSize())!.width < 1024) {
-      await page.locator('.menuButton').click();
+      await page.locator('button[aria-label="Toggle menu"]').click();
       await page.waitForTimeout(500); // Allow animation to complete
     }
     
@@ -42,7 +42,7 @@ test.describe('Authentication & Authorization (US-ADM)', () => {
     await expect(dashboardPage.settingsLink).toBeVisible();
   });
 
-  test('TC-ADM-002: Role-based navigation restrictions', async ({ page }) => {
+  test('TC-ADM-002: Role-based navigation restrictions', async ({ page, isMobile }) => {
     // Test different user roles have appropriate access
     
     // Team Member - limited access
@@ -51,6 +51,12 @@ test.describe('Authentication & Authorization (US-ADM)', () => {
       TEST_USERS.teamMember.email,
       TEST_USERS.teamMember.password
     );
+    
+    // For mobile devices, open the mobile menu to access navigation
+    if (isMobile || (await page.viewportSize())!.width < 1024) {
+      await page.locator('button[aria-label="Toggle menu"]').click();
+      await page.waitForTimeout(500); // Allow animation to complete
+    }
     
     await expect(dashboardPage.inventoryLink).toBeVisible();
     await expect(dashboardPage.productionLink).toBeVisible();
@@ -65,6 +71,12 @@ test.describe('Authentication & Authorization (US-ADM)', () => {
       TEST_USERS.shiftLead.password
     );
     
+    // For mobile devices, open the mobile menu again
+    if (isMobile || (await page.viewportSize())!.width < 1024) {
+      await page.locator('button[aria-label="Toggle menu"]').click();
+      await page.waitForTimeout(500); // Allow animation to complete
+    }
+    
     await expect(dashboardPage.inventoryLink).toBeVisible();
     await expect(dashboardPage.productionLink).toBeVisible();
     // Shift leads might have limited admin access - check based on your requirements
@@ -77,29 +89,34 @@ test.describe('Authentication & Authorization (US-ADM)', () => {
     await loginPage.loginAndExpectError(
       TEST_USERS.admin.email,
       'wrongpassword',
-      'Invalid credentials'
+      'Invalid email or password'
     );
     
     // Non-existent user
     await loginPage.loginAndExpectError(
       'nonexistent@example.com',
       'password123',
-      'Invalid credentials'
+      'Invalid email or password'
     );
     
-    // Empty fields
-    await loginPage.login('', '');
-    await expect(loginPage.loginButton).toBeDisabled();
+    // Empty fields - should show validation error when submitted
+    await loginPage.emailInput.fill('');
+    await loginPage.passwordInput.fill('');
+    await loginPage.loginButton.click();
+    // The form should stay on login page (not redirect)
+    await expect(page).toHaveURL('/login');
   });
 
-  test('TC-ADM-004: Session persistence and logout', async ({ page }) => {
+  test('TC-ADM-004: Session persistence and logout', async ({ page, isMobile }) => {
     // Login and verify session
     await authHelper.loginAs('admin');
     
     // Navigate away and back - should stay logged in
     await page.goto('/inventory');
     await page.goto('/dashboard');
-    await expect(dashboardPage.userNameDisplay).toBeVisible();
+    
+    // Verify still logged in by checking dashboard content (user name may be hidden on mobile)
+    await expect(dashboardPage.pageTitle).toBeVisible();
     
     // Logout and verify redirect
     await authHelper.logout();

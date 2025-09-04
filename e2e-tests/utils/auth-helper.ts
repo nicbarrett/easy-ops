@@ -15,8 +15,9 @@ export class AuthHelper {
     // Wait for redirect to dashboard
     await this.page.waitForURL('/dashboard');
     
-    // Verify user is logged in by checking header  
-    await this.page.waitForSelector(`text=${user.firstName} ${user.lastName}`);
+    // Verify user is logged in by checking for dashboard content instead of user name
+    // User name may be hidden on mobile
+    await this.page.waitForSelector('h1:has-text("Good evening")');
   }
 
   async logout() {

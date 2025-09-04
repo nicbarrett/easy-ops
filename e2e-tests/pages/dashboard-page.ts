@@ -35,21 +35,21 @@ export class DashboardPage extends BasePage {
     return this.page.locator('[data-testid="refresh-dashboard"]');
   }
 
-  // Navigation elements (use first match from sidebar)
+  // Navigation elements (works for both desktop and mobile)
   get inventoryLink(): Locator {
-    return this.page.locator('a[href="/inventory"]').first();
+    return this.page.locator('a[href="/inventory"]:visible').first();
   }
 
   get productionLink(): Locator {
-    return this.page.locator('a[href="/production"]').first();
+    return this.page.locator('a[href="/production"]:visible').first();
   }
 
   get usersLink(): Locator {
-    return this.page.locator('a[href="/users"]').first();
+    return this.page.locator('a[href="/users"]:visible').first();
   }
 
   get settingsLink(): Locator {
-    return this.page.locator('a[href="/settings"]').first();
+    return this.page.locator('a[href="/settings"]:visible').first();
   }
 
   get userNameDisplay(): Locator {

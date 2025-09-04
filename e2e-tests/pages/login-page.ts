@@ -20,7 +20,7 @@ export class LoginPage extends BasePage {
   }
 
   get errorMessage(): Locator {
-    return this.page.locator('[class*="error"]');
+    return this.page.locator('text=Invalid email or password');
   }
 
   get forgotPasswordLink(): Locator {
@@ -52,6 +52,6 @@ export class LoginPage extends BasePage {
 
   async loginAndExpectError(email: string, password: string, expectedError: string) {
     await this.login(email, password);
-    await this.page.waitForSelector(`[class*="error"]:has-text("${expectedError}")`);
+    await this.page.waitForSelector(`text=${expectedError}`);
   }
 }
