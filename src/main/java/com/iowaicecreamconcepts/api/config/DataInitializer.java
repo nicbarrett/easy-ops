@@ -21,7 +21,6 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-@Profile("!test")
 public class DataInitializer implements CommandLineRunner {
 
     private final LocationRepository locationRepository;
